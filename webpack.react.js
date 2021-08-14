@@ -2,14 +2,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: "development",
   entry: './src/renderer/index.tsx',
   target: 'electron-renderer',
   devtool: 'source-map',
   devServer: {
     contentBase: path.join(__dirname, 'dist/renderer/index.js'),
     compress: true,
-    port: 9000
+    hot: true,
+    port: 8080,
   },
   resolve: {
     alias: {
@@ -37,6 +38,20 @@ module.exports = {
   output: {
     path: __dirname + '/dist/renderer',
     filename: 'index.js'
+  },
+  devServer: {
+    /*The bundled files will be available in the browser under this path. 
+    publicPath says that any request made to '/' will be served the development version of our bundle via localhost:8080. publicPath should match where we have index.html
+    */
+    publicPath: '/dist',
+
+    hot: true,
+    // Tell the server where to serve content from.
+    contentBase: path.resolve(__dirname, './dist'),
+    watchContentBase: true,
+
+    // Proxy says taht any request made to '/api' will be routed to our server on localhost:3000
+    // proxy should match whatever is going to match your fetch request on your frontend.
   },
   plugins: [
     new HtmlWebpackPlugin({

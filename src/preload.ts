@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld(
         incrementCount: () => {
             ipcRenderer.send('main:test')
         },
+        openFile: () =>{
+            ipcRenderer.send('main:open-file')
+        }
     }
 )
 

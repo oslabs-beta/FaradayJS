@@ -1,11 +1,12 @@
 import React from 'react';
 
+import NavBar from './components/NavBar'
+
 const App = () => {
   return (
     <div>
       <h1>Hello</h1>
-      <button id = 'test-button'>Click</button>
-      <span id = 'demo'>dddd</span>
+      <NavBar/>
     </div>
   )
 }
