@@ -14,13 +14,22 @@ module.exports = {
   },
   module: {
     rules: [{
+      // "test" is commonly used to match the file extension
       test: /\.ts$/,
+      // include all modules matching these conditions (/src folder)
       include: /src/,
+        // "exclude" should be used to exclude exceptions
+        // try to prefer "include" when possible
+
+        // the "loader"
       use: [{ loader: 'ts-loader' }]
     }]
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: 'main.js'
+  },
+  node: {
+    __dirname: false
   }
 }
