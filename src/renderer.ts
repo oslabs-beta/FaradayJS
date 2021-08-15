@@ -15,3 +15,4 @@ openFileButton?.addEventListener('click', ()=>{
   //@ts-expect-error
   bridgeAPI.openFile();
 })
+

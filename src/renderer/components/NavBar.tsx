@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+//import { ipcRenderer } from 'electron';
 
 const NavBar = () =>{
+
+
   return(
     <div>
       <button id = 'open-file'>Open File</button>
       <button id = 'test-button'>Click</button>
       <span id = 'demo'>dddd</span>
+      <span id = 'hello'>Hello</span>
     </div>
   )
 }

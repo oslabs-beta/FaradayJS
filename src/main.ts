@@ -19,21 +19,28 @@ const createWindow = (): void => {
   win.loadFile(path.join(__dirname, './index.html'));
   //win.loadURL(`file://${path.join(__dirname, "index.html")}`)
 
-  ipcMain.on('main:test', (event, playload)=>{
-    dialog.showErrorBox('Hello', "This is a test")
-    win.webContents.send('preload:test', "Holla")
-  })
+
 
   ipcMain.on('main:open-file', async (event, payload)=>{
     try{
       const result = await OpenFile();
       //console.log(result)
+
       event.reply('preload:open-file', result)
+
     }catch(err){
       console.log(err)
     }
   })
 
+  ipcMain.on('main:test', (event, payload)=>{
+    console.log('this is main')
+    //dialog.showErrorBox('Hello', "This is a test")
+    //win.webContents.on('dom-ready', ()=>{
+      event.sender.send('preload:test', 'sdsdsdsdsdsd')
+      //win.webContents.send('preload:test', 'dfjifodff')
+    // })
+  })
 
   const isMac = process.platform === 'darwin'  
 
