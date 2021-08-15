@@ -8,10 +8,17 @@ contextBridge.exposeInMainWorld(
         },
         openFile: () =>{
             ipcRenderer.send('main:open-file')
+        },
+        recieve: (channel:any, func:any) =>{
+            let validChannels = ['preload:test'];
+            console.log(validChannels)
+            console.log(channel)
         }
     }
 )
 
-ipcRenderer.on('preload:set-count', (event, newCount) => {
-    console.log("preload:set-count")
+
+ipcRenderer.on('preload:open-file', (event, arg) => {
+    console.log('preload:open-file')
+    console.log(arg);
 })

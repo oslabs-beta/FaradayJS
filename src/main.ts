@@ -2,7 +2,6 @@ import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
-const {arr} = require('./appUtil/menu')
 
 let win: BrowserWindow;
 
@@ -20,12 +19,19 @@ const createWindow = (): void => {
   win.loadFile(path.join(__dirname, './index.html'));
   //win.loadURL(`file://${path.join(__dirname, "index.html")}`)
 
-  ipcMain.on('main:test', ()=>{
+  ipcMain.on('main:test', (event, playload)=>{
     dialog.showErrorBox('Hello', "This is a test")
+    win.webContents.send('preload:test', "Holla")
   })
 
-  ipcMain.on('main:open-file', ()=>{
-    OpenFile();
+  ipcMain.on('main:open-file', async (event, payload)=>{
+    try{
+      const result = await OpenFile();
+      //console.log(result)
+      event.reply('preload:open-file', result)
+    }catch(err){
+      console.log(err)
+    }
   })
 
 
@@ -38,8 +44,8 @@ const createWindow = (): void => {
         {
           label: "Open File",
           accelerator: 'CmdOrCtrl+O',
-          click:()=>{
-            OpenFile()
+          click: ()=>{
+             OpenFile();
           }
         },
         {label: "Open Folder"},
@@ -51,7 +57,104 @@ const createWindow = (): void => {
         }
       ]
     },
-    ...arr
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }] : []),
+    // { role: 'editMenu' }
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        ...(isMac ? [
+          { role: 'pasteAndMatchStyle' },
+          { role: 'delete' },
+          { role: 'selectAll' },
+          { type: 'separator' },
+          {
+            label: 'Speech',
+            submenu: [
+              { role: 'startSpeaking' },
+              { role: 'stopSpeaking' }
+            ]
+          }
+        ] : [
+          { role: 'delete' },
+          { type: 'separator' },
+          { role: 'selectAll' }
+        ])
+      ]
+    },
+    // { role: 'viewMenu' }
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    // { role: 'windowMenu' }
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'zoom' },
+        ...(isMac ? [
+          { type: 'separator' },
+          { role: 'front' },
+          { type: 'separator' },
+          { role: 'window' }
+        ] : [
+          { role: 'close' }
+        ])
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://electronjs.org')
+          }
+        }
+      ]
+    },
+    {
+      label: 'Developer',
+      submenu:[
+        {
+          label: 'Toggle Developer Tools', 
+          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click: ()=>{
+            win.webContents.toggleDevTools();
+          }
+        }
+      ]
+    }
   ]
   
 
@@ -85,6 +188,6 @@ const OpenFile = async () =>{
   const file = await files ; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
   if(file) { // !! ensures the resulting type is a boolean
     const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
-    console.log(fileContent)
+    return fileContent;
   }; 
 }
