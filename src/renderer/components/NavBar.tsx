@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-//import { ipcRenderer } from 'electron';
 
 const NavBar = () =>{
 
+  ipcRenderer.on('preload:test', ()=>{
+    console.log('ddd')
+  })
 
   return(
     <div>
