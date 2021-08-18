@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   // Build Mode
-  mode: 'development',
+  mode: "development",
   // Electron Entrypoint
   entry: './src/main.ts',
   target: 'electron-main',
@@ -29,7 +29,4 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'main.js'
   },
-  node: {
-    __dirname: false
-  }
 }
