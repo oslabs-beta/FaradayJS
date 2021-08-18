@@ -171,8 +171,6 @@ const createWindow = (): void => {
 }
 
 
-
-
 app.on('ready', createWindow);
 
 
@@ -182,8 +180,8 @@ const OpenFile = async () =>{
   const files: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
     properties: ['openFile'],
     filters: [{
-      name: 'Markdown',
-      extensions: ['md', 'markdown', 'txt']
+      name: 'JS/TS files',
+      extensions: ['ts', 'tsx', 'js', 'jsx']
     }]
   })
 
