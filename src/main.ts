@@ -205,6 +205,7 @@ const OpenFile = async () =>{
 
 const OpenFolder = async()=>{
   try{
+    
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     })
@@ -213,23 +214,25 @@ const OpenFolder = async()=>{
 
     const readAllFolder = (dirMain:string) =>{
       const readDirMain = fs.readdirSync(dirMain);
-
-      console.log(dirMain);
-      console.log(readDirMain);
+      const temparr:string[] = [];
+      //console.log(dirMain);
+      //console.log(readDirMain);
 
       readDirMain.forEach((dirNext:string)=>{
-        console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
+        //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         }else{
           const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
-          console.log(fileContent)
+          //console.log(fileContent)
+          temparr.push(fileContent)
         }
       })
+      return temparr;
     }
 
-    readAllFolder(folder.filePaths[0])
-
+    const result = await readAllFolder(folder.filePaths[0])
+    return result;
   }catch(err){
     console.log(err)
   }
