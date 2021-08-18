@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld(
         },
         openFile: () =>{
             ipcRenderer.send('main:open-file')
+        },
+        openFolder: ()=>{
+            ipcRenderer.send('main:open-folder')
         }
     }
 )
@@ -23,4 +26,8 @@ ipcRenderer.on('preload:test', (event, arg)=>{
     //dialog.showErrorBox('Hello', "This is a test")
     //@ts-expect-error
     document.getElementById('hello').innerHTML = "dasdsdsds5gh45g5"
+})
+
+ipcRenderer.on('preload:open-folder', (event, arg)=>{
+    console.log(arg)
 })

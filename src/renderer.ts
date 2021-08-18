@@ -1,6 +1,7 @@
 const button = document.getElementById('test-button')
 const demo = <HTMLElement | null> document.getElementById('demo')
 const openFileButton = document.getElementById('open-file');
+const openFolderButton = document.getElementById('open-folder')
 
 button?.addEventListener('click', ()=>{
   
@@ -16,3 +17,7 @@ openFileButton?.addEventListener('click', ()=>{
   bridgeAPI.openFile();
 })
 
+openFolderButton?.addEventListener('click', ()=>{
+  //@ts-expect-error
+  bridgeAPI.openFolder();
+})
