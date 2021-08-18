@@ -42,6 +42,14 @@ const createWindow = (): void => {
     // })
   })
 
+  ipcMain.on('main:open-folder', async (event, payload)=>{
+
+      const result = await OpenFolder();
+      event.sender.send('preload:open-folder', result)
+
+  })
+
+
   const isMac = process.platform === 'darwin'  
 
   const template: any = [
@@ -171,8 +179,6 @@ const createWindow = (): void => {
 }
 
 
-
-
 app.on('ready', createWindow);
 
 
@@ -182,15 +188,13 @@ const OpenFile = async () =>{
   const files: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
     properties: ['openFile'],
     filters: [{
-      name: 'Markdown',
-      extensions: ['md', 'markdown', 'txt']
+      name: 'JS/TS files',
+      extensions: ['ts', 'tsx', 'js', 'jsx']
     }]
   })
 
   // If no files
   if(!files) return;
-
-
 
   const file = await files ; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
   if(file) { // !! ensures the resulting type is a boolean
@@ -198,3 +202,36 @@ const OpenFile = async () =>{
     return fileContent;
   }; 
 }
+
+const OpenFolder = async()=>{
+  try{
+    const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
+      properties: ['openDirectory']
+    })
+    if(!folders) return;
+    const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
+
+    const readAllFolder = (dirMain:string) =>{
+      const readDirMain = fs.readdirSync(dirMain);
+
+      console.log(dirMain);
+      console.log(readDirMain);
+
+      readDirMain.forEach((dirNext:string)=>{
+        console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
+        if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
+          readAllFolder(dirMain + "/" + dirNext);
+        }else{
+          const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
+          console.log(fileContent)
+        }
+      })
+    }
+
+    readAllFolder(folder.filePaths[0])
+
+  }catch(err){
+    console.log(err)
+  }
+}
+
