@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
 import parser from './appUtil/parser'
-import traverser from './appUtil/traverse'
+//import traverser from './appUtil/traverse'
 import checker from './appUtil/checker'
+import traverser from './appUtil/tsestraverse';
+
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
@@ -214,11 +216,13 @@ const OpenFolder = async()=>{
       properties: ['openDirectory']
     })
     if(!folders) return;
-    const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
+    
+    const temparr:string[] = [];
 
+    const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
     const readAllFolder = (dirMain:string) =>{
       const readDirMain = fs.readdirSync(dirMain);
-      const temparr:string[] = [];
+      
       //console.log(dirMain);
       //console.log(readDirMain);
 
@@ -227,20 +231,39 @@ const OpenFolder = async()=>{
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         }else{
-          const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
-          //console.log(fileContent)
-          temparr.push(fileContent)
+          if((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))){
+            //console.log(dirMain+"/"+dirNext)
+            const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            temparr.push(fileContent)
+          }
         }
       })
       return temparr;
     }
+
     const result = await readAllFolder(folder.filePaths[0])
+    
+    
+    // let resultObj;
+    // for(let i = 0; i<temparr.length;i++){
+    //   //console.log(parser(result[i]))
+    //   if(!result[i].includes("react")){
+    //     const ast = parser(result[i])
+    //     //console.log(ast)
+    //     resultObj = await traverser(ast, 0)
+    //     //console.log(resultObj)
+    //     console.log(checker(resultObj, 10))
+    //   }
+    // }
 
     const ast = parser(result[0])
-    const resultObj = await traverser(ast, 0);
+    //const resultObj = await traverser(ast, 0);
+    //console.log(resultObj)
+
+    const resultObj = await traverser(ast);
 
     // resultObj is object, 10 is version
-    console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
+    //console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
 
     return result;
   }catch(err){

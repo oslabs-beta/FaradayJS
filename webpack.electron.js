@@ -15,9 +15,9 @@ module.exports = {
   module: {
     rules: [{
       // "test" is commonly used to match the file extension
-      test: /\.ts$/,
+      test: /\.(js(x?)|ts(x?))$/,
       // include all modules matching these conditions (/src folder)
-      include: /src/,
+      exclude: /node_modules/,
         // "exclude" should be used to exclude exceptions
         // try to prefer "include" when possible
 
