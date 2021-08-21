@@ -1,6 +1,5 @@
 import defaultConfig from './defaultConfig'
 
-
 const checker = (node:{[key:string]:string|number|boolean|undefined|null}, version:number) =>{
   const keyFromDefaultConfigOver10_0_0 = Object.values(defaultConfig)[2]      
   let tempArr = [];

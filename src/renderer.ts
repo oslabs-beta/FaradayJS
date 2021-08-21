@@ -6,7 +6,8 @@ const openFolderButton = document.getElementById('open-folder')
 button?.addEventListener('click', ()=>{
   
   //@ts-expect-error
-  demo?.innerHTML = 'dddasfasfd'
+  // demo?.innerHTML = 'dddasfasfd'
+  if(demo) demo.innerHTML='dddasfasfd'
 
   //@ts-expect-error
   bridgeAPI.incrementCount();

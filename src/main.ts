@@ -8,7 +8,6 @@ const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
 
-
 let win: BrowserWindow;
 
 const createWindow = (): void => {

@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer, dialog } = require('electron')
+const bannana = ''
 
 contextBridge.exposeInMainWorld(
     'bridgeAPI',
