@@ -9,7 +9,8 @@ const traverser = (ast:any) =>{
       }
     },
     leave: function (node:any, parent:any) {
-      if (node.type == 'Property'){
+      if (node.type == 'Property') {
+        //console.log(node.key.name, node.value.value);
         cache[node.key.name] = node.value.value
       }
     }

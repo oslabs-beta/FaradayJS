@@ -261,9 +261,9 @@ const OpenFolder = async()=>{
     //console.log(resultObj)
 
     const resultObj = await traverser(ast);
-    console.log(resultObj)
+    console.log(resultObj);
     // resultObj is object, 10 is version
-    //console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
+    console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
 
     return result;
   }catch(err){
