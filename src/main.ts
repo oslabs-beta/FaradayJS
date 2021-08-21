@@ -1,7 +1,11 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
+import parser from './appUtil/parser'
+import traverser from './appUtil/traverse'
+import checker from './appUtil/checker'
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
+
 
 let win: BrowserWindow;
 
@@ -230,8 +234,14 @@ const OpenFolder = async()=>{
       })
       return temparr;
     }
-
     const result = await readAllFolder(folder.filePaths[0])
+
+    const ast = parser(result[0])
+    const resultObj = await traverser(ast, 0);
+
+    // resultObj is object, 10 is version
+    console.log(checker(resultObj, 10))
+
     return result;
   }catch(err){
     console.log(err)

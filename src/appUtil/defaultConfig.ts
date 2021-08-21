@@ -1,4 +1,4 @@
-{
+const defaultConfig = {
   "0.1.0": {
       "allowRunningInsecureContent": false,
       "contextIsolation": false,
@@ -66,3 +66,5 @@
       "webviewTag": false
   }
 }
+
+export default defaultConfig
