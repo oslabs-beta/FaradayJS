@@ -231,8 +231,16 @@ const OpenFolder = async()=>{
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         }else{
-          if((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))){
-            //console.log(dirMain+"/"+dirNext)
+          //if((!(dirMain + "/" + dirNext).includes('.eslintrc'))){
+          if(
+            ((dirMain + "/" + dirNext).includes('.js') ||
+            (dirMain + "/" + dirNext).includes('.jsx') ||
+            (dirMain + "/" + dirNext).includes('.html') ||
+            (dirMain + "/" + dirNext).includes('.ts') ||
+            (dirMain + "/" + dirNext).includes('.tsx')) &&
+            !(dirMain + "/" + dirNext).includes(".vscode")
+          ){
+            console.log(dirMain+"/"+dirNext)
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
             temparr.push(fileContent)
           }
@@ -244,26 +252,26 @@ const OpenFolder = async()=>{
     const result = await readAllFolder(folder.filePaths[0])
     
     
-    // let resultObj;
-    // for(let i = 0; i<temparr.length;i++){
-    //   //console.log(parser(result[i]))
-    //   if(!result[i].includes("react")){
-    //     const ast = parser(result[i])
-    //     //console.log(ast)
-    //     resultObj = await traverser(ast, 0)
-    //     //console.log(resultObj)
-    //     console.log(checker(resultObj, 10))
-    //   }
-    // }
+    let resultObj;
+    for(let i = 0; i<temparr.length;i++){
+      //console.log(parser(result[i]))
+      if(!result[i].includes("react")){
+        const ast = parser(result[i])
+        //console.log(ast)
+        resultObj = await traverser(ast)
+        console.log(resultObj)
+        //console.log(checker(resultObj, 10))
+      }
+    }
 
-    const ast = parser(result[0])
+    //const ast = parser(result[0])
     //const resultObj = await traverser(ast, 0);
     //console.log(resultObj)
 
-    const resultObj = await traverser(ast);
-    console.log(resultObj);
+    //const resultObj = await traverser(ast);
+    //console.log(resultObj);
     // resultObj is object, 10 is version
-    console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
+  //  console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
 
     return result;
   }catch(err){
