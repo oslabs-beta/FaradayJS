@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
-import parser from './appUtil/parser'
-//import traverser from './appUtil/traverse'
+import {parser, htmlparser} from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 
@@ -218,6 +217,8 @@ const OpenFolder = async()=>{
     if(!folders) return;
     
     const temparr:string[] = [];
+    const tempHTMLarr:string[] = [];
+    const tempPackageJsonarr:string [] = [];
 
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
     const readAllFolder = (dirMain:string) =>{
@@ -231,49 +232,46 @@ const OpenFolder = async()=>{
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         }else{
-          //if((!(dirMain + "/" + dirNext).includes('.eslintrc'))){
+          'use strict';
           if(
             ((dirMain + "/" + dirNext).includes('.js') ||
             (dirMain + "/" + dirNext).includes('.jsx') ||
-            (dirMain + "/" + dirNext).includes('.html') ||
             (dirMain + "/" + dirNext).includes('.ts') ||
             (dirMain + "/" + dirNext).includes('.tsx')) &&
-            !(dirMain + "/" + dirNext).includes(".vscode")
+            !(dirMain + "/" + dirNext).includes(".vscode") &&
+            !(dirMain + "/" + dirNext).includes(".json")
           ){
-            console.log(dirMain+"/"+dirNext)
+            //console.log(dirMain+"/"+dirNext)
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
             temparr.push(fileContent)
+          }else if((dirMain + "/" + dirNext).includes('.html')){
+            const fileContentHTML = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            tempHTMLarr.push(fileContentHTML)
+          }else if ((dirMain + "/" + dirNext).includes('package.json')){
+            const fileContentPackageJson = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            tempPackageJsonarr.push(fileContentPackageJson)
           }
         }
       })
       return temparr;
     }
 
-    const result = await readAllFolder(folder.filePaths[0])
-    
-    
+    await readAllFolder(folder.filePaths[0])
+
     let resultObj;
+
     for(let i = 0; i<temparr.length;i++){
-      //console.log(parser(result[i]))
-      if(!result[i].includes("react")){
-        const ast = parser(result[i])
-        //console.log(ast)
+        const ast = parser(temparr[i])
         resultObj = await traverser(ast)
-        console.log(resultObj)
-        //console.log(checker(resultObj, 10))
-      }
+        //console.log(resultObj)
+        console.log(checker(resultObj, 10)) // [config, your electron config, default safe one]
     }
+    for(let i = 0; i<tempHTMLarr.length; i++){
+      const astHTML = htmlparser(tempHTMLarr[i])
+    }
+    const astPackageJson = tempPackageJsonarr[0]
 
-    //const ast = parser(result[0])
-    //const resultObj = await traverser(ast, 0);
-    //console.log(resultObj)
-
-    //const resultObj = await traverser(ast);
-    //console.log(resultObj);
-    // resultObj is object, 10 is version
-  //  console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
-
-    return result;
+    return 'Compiled List';
   }catch(err){
     console.log(err)
   }
