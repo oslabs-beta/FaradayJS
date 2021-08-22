@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
 import {parser, htmlparser} from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
+import versionFinder from './appUtil/versionFinder';
 
 const fs = require('fs')
 const path = require('path')
@@ -218,30 +219,33 @@ const OpenFolder = async()=>{
     
     const temparr:string[] = [];
     const tempHTMLarr:string[] = [];
-    const tempPackageJsonarr:string [] = [];
+    let tempPackageJsonarr:string = '';
+    const folderLoc:string[] = [];
 
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
+      
     const readAllFolder = (dirMain:string) =>{
       const readDirMain = fs.readdirSync(dirMain);
       
-      //console.log(dirMain);
-      //console.log(readDirMain);
 
       readDirMain.forEach((dirNext:string)=>{
         //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         }else{
-          'use strict';
           if(
             ((dirMain + "/" + dirNext).includes('.js') ||
             (dirMain + "/" + dirNext).includes('.jsx') ||
             (dirMain + "/" + dirNext).includes('.ts') ||
             (dirMain + "/" + dirNext).includes('.tsx')) &&
             !(dirMain + "/" + dirNext).includes(".vscode") &&
-            !(dirMain + "/" + dirNext).includes(".json")
+            !(dirMain + "/" + dirNext).includes(".json") && 
+            !(dirMain + "/" + dirNext).includes("node_modules") &&
+            !(dirMain + "/" + dirNext).includes(".txt") &&
+            !(dirMain + "/" + dirNext).includes("dist") && // Hard coded to ignore dist and build folder. Gotta find a way to not hard code
+            !(dirMain + "/" + dirNext).includes("build")
           ){
-            //console.log(dirMain+"/"+dirNext)
+            folderLoc.push(dirMain+"/"+dirNext)
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
             temparr.push(fileContent)
           }else if((dirMain + "/" + dirNext).includes('.html')){
@@ -249,7 +253,7 @@ const OpenFolder = async()=>{
             tempHTMLarr.push(fileContentHTML)
           }else if ((dirMain + "/" + dirNext).includes('package.json')){
             const fileContentPackageJson = fs.readFileSync(dirMain + "/" + dirNext).toString();
-            tempPackageJsonarr.push(fileContentPackageJson)
+            tempPackageJsonarr = fileContentPackageJson
           }
         }
       })
@@ -262,14 +266,19 @@ const OpenFolder = async()=>{
 
     for(let i = 0; i<temparr.length;i++){
         const ast = parser(temparr[i])
+        ast.location = folderLoc[i]
+        //console.log(ast)
         resultObj = await traverser(ast)
         //console.log(resultObj)
-        console.log(checker(resultObj, 10)) // [config, your electron config, default safe one]
+        checker(resultObj, 10) // [config, your electron config, default safe one]
     }
     for(let i = 0; i<tempHTMLarr.length; i++){
       const astHTML = htmlparser(tempHTMLarr[i])
     }
-    const astPackageJson = tempPackageJsonarr[0]
+
+    const astPackageJson = JSON.parse(tempPackageJsonarr);
+    const version = versionFinder(JSON.parse(tempPackageJsonarr));
+    console.log(version)
 
     return 'Compiled List';
   }catch(err){
