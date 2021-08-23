@@ -237,6 +237,7 @@ const OpenFolder = async()=>{
             temparr.push(fileContent)
           }
         }
+        //console.log(dirMain+"/"+dirNext)
       })
       return temparr;
     }
@@ -263,7 +264,7 @@ const OpenFolder = async()=>{
     const resultObj = await traverser(ast);
     console.log(resultObj);
     // resultObj is object, 10 is version
-    console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
+    console.log(checker(resultObj, 10)) // This returns test results object
 
     return result;
   }catch(err){

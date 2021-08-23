@@ -1,7 +1,7 @@
 import defaultConfig from './defaultConfig'
 
 
-const checker = (propertiesObj:{[key:string]:string|number|boolean|undefined|null}, version:number) =>{
+const checker = (propertiesObj:{[key:string]:any}, version:number) =>{
   const versionDefaults = Object.values(defaultConfig)[2]      
   // let tempArr = [];
   // for(let i = 0; i<Object.keys(node).length; i++){
@@ -26,17 +26,21 @@ const checker = (propertiesObj:{[key:string]:string|number|boolean|undefined|nul
     // else set status to pass/fail based on default
 
   const testProp = 'webSecurity';
-  const failValue = false;
+  const failValue:boolean = false;
   const testResult = {
     testProp: testProp,
     failValue: failValue,
-    status: 'unknown'
+    status: 'unknown',
+    start: undefined,
+    end: undefined
   };
 
   if (propertiesObj.hasOwnProperty(testProp)) {
-    if (propertiesObj[testProp] === failValue) {
+    testResult.start = propertiesObj[testProp].start;
+    testResult.end = propertiesObj[testProp].end;
+    if (propertiesObj[testProp].value === failValue) {
       testResult.status = 'fail';
-    } else if (propertiesObj[testProp] === !failValue) {
+    } else if (propertiesObj[testProp].value === !failValue) {
       testResult.status = 'pass';
     }
   } else if (versionDefaults[testProp] === failValue) {
