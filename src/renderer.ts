@@ -3,14 +3,14 @@ const demo = <HTMLElement | null> document.getElementById('demo')
 const openFileButton = document.getElementById('open-file');
 const openFolderButton = document.getElementById('open-folder')
 
-button?.addEventListener('click', ()=>{
+// button?.addEventListener('click', ()=>{
   
-  //@ts-expect-error
-  demo?.innerHTML = 'dddasfasfd'
+//   //@ts-expect-error
+//   demo?.innerHTML = 'dddasfasfd'
 
-  //@ts-expect-error
-  bridgeAPI.incrementCount();
-})
+//   //@ts-expect-error
+//   bridgeAPI.incrementCount();
+// })
 
 openFileButton?.addEventListener('click', ()=>{
   //@ts-expect-error

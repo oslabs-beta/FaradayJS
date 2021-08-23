@@ -40,7 +40,7 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('main:test', (event, payload)=>{
-    console.log('this is main')
+    //console.log('this is main')
     //dialog.showErrorBox('Hello', "This is a test")
     //win.webContents.on('dom-ready', ()=>{
       event.sender.send('preload:test', 'sdsdsdsdsdsd')
@@ -264,6 +264,8 @@ const OpenFolder = async()=>{
 
     let resultObj;
 
+
+    // Can we get rid of this loop by putting it in the read folder loop? Maybe we can do async wait? 
     for(let i = 0; i<temparr.length;i++){
         const ast = parser(temparr[i])
         ast.location = folderLoc[i]
@@ -278,7 +280,6 @@ const OpenFolder = async()=>{
 
     const astPackageJson = JSON.parse(tempPackageJsonarr);
     const version = versionFinder(JSON.parse(tempPackageJsonarr));
-    console.log(version)
 
     return 'Compiled List';
   }catch(err){
