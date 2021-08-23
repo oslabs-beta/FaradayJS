@@ -7,6 +7,7 @@ import traverser from './appUtil/tsestraverse';
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
+const bannana = ''
 
 let win: BrowserWindow;
 
@@ -15,7 +16,11 @@ const createWindow = (): void => {
     width: 800,
     height: 600,
     webPreferences: {
+      webSecurity: true,
       nodeIntegration: true,
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false,
+      enableBlinkFeatures: "",
       preload: path.join(__dirname, "preload.js")
     }
   });

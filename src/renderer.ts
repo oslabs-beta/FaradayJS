@@ -22,3 +22,5 @@ openFolderButton?.addEventListener('click', ()=>{
   //@ts-expect-error
   bridgeAPI.openFolder();
 })
+
+
