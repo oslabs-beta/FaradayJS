@@ -27,6 +27,7 @@ contextBridge.exposeInMainWorld(
     {
         incrementCount:()=>{
             ipcRenderer.send('main:test',{})
+            //ipcRenderer.removeAllListeners('main:test')
         },
         receiveCount: (channel:any, func:any) =>{
             let validChannels = ["preload:test"];

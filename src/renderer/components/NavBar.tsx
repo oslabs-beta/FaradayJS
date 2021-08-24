@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+
 
 const NavBar = () =>{
 
+  useEffect(() => {
+    
+  },)
+  
   const handleClick = () => {
   //@ts-expect-error
     API.incrementCount();
@@ -15,6 +21,17 @@ const NavBar = () =>{
   //     console.log(`Received ${data} from main process`);
   // });
   }
+
+  const handleClickOpenFile = () =>{
+    //@ts-expect-error
+    bridgeAPI.openFile();
+  }
+
+  const handleClickOpenFolder = () =>{
+    //@ts-expect-error
+    bridgeAPI.openFolder();
+  }
+
 
   return(
     <div>

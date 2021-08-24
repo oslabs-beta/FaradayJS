@@ -6,6 +6,7 @@ export const parser = (obj: string) => {
     jsx: true,
   };
   const parsed = parse.parse(obj, options);
+  console.log(parsed)
   return parsed;
 };
 
