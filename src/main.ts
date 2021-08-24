@@ -162,7 +162,6 @@ const OpenFolder = async()=>{
 
     //const astPackageJson = JSON.parse(tempPackageJsonarr);
     const version = versionFinder(JSON.parse(tempPackageJsonarr));
-    console.log(version)
 
     return 'Compiled List';
   }catch(err){
