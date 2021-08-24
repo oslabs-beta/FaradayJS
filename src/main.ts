@@ -3,6 +3,7 @@ import {parser, htmlparser} from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
+import menuTemplate from './appUtil/menuTemplate';
 
 const fs = require('fs')
 const path = require('path')
@@ -58,125 +59,7 @@ const createWindow = (): void => {
 
   const isMac = process.platform === 'darwin'  
 
-  const template: any = [
-    {
-      label: 'File',
-      submenu: [
-        {
-          label: "Open File",
-          accelerator: 'CmdOrCtrl+O',
-          click: ()=>{
-             OpenFile();
-          }
-        },
-        {label: "Open Folder"},
-        isMac ? { role: 'close' } : { role: 'quit' },
-        {type:'separator'},
-        {
-          label: 'test-1',
-          submenu: [{label: 'test-2'}]
-        }
-      ]
-    },
-    ...(isMac ? [{
-      label: app.name,
-      submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
-      ]
-    }] : []),
-    // { role: 'editMenu' }
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        ...(isMac ? [
-          { role: 'pasteAndMatchStyle' },
-          { role: 'delete' },
-          { role: 'selectAll' },
-          { type: 'separator' },
-          {
-            label: 'Speech',
-            submenu: [
-              { role: 'startSpeaking' },
-              { role: 'stopSpeaking' }
-            ]
-          }
-        ] : [
-          { role: 'delete' },
-          { type: 'separator' },
-          { role: 'selectAll' }
-        ])
-      ]
-    },
-    // { role: 'viewMenu' }
-    {
-      label: 'View',
-      submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
-      ]
-    },
-    // { role: 'windowMenu' }
-    {
-      label: 'Window',
-      submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
-        ...(isMac ? [
-          { type: 'separator' },
-          { role: 'front' },
-          { type: 'separator' },
-          { role: 'window' }
-        ] : [
-          { role: 'close' }
-        ])
-      ]
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click: async () => {
-            const { shell } = require('electron')
-            await shell.openExternal('https://electronjs.org')
-          }
-        }
-      ]
-    },
-    {
-      label: 'Developer',
-      submenu:[
-        {
-          label: 'Toggle Developer Tools', 
-          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-          click: ()=>{
-            win.webContents.toggleDevTools();
-          }
-        }
-      ]
-    }
-  ]
+  const template: any = [...menuTemplate]
   
 
   const menu = Menu.buildFromTemplate(template);
@@ -228,7 +111,7 @@ const OpenFolder = async()=>{
       const readDirMain = fs.readdirSync(dirMain);
       
 
-      readDirMain.forEach((dirNext:string)=>{
+      readDirMain.forEach(async (dirNext:string)=>{
         //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
@@ -252,7 +135,7 @@ const OpenFolder = async()=>{
             const fileContentHTML = fs.readFileSync(dirMain + "/" + dirNext).toString();
             tempHTMLarr.push(fileContentHTML)
           }else if ((dirMain + "/" + dirNext).includes('package.json')){
-            const fileContentPackageJson = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            const fileContentPackageJson = await fs.readFileSync(dirMain + "/" + dirNext).toString();
             tempPackageJsonarr = fileContentPackageJson
           }
         }
@@ -265,7 +148,6 @@ const OpenFolder = async()=>{
     let resultObj;
 
 
-    // Can we get rid of this loop by putting it in the read folder loop? Maybe we can do async wait? 
     for(let i = 0; i<temparr.length;i++){
         const ast = parser(temparr[i])
         ast.location = folderLoc[i]
@@ -278,8 +160,9 @@ const OpenFolder = async()=>{
       const astHTML = htmlparser(tempHTMLarr[i])
     }
 
-    const astPackageJson = JSON.parse(tempPackageJsonarr);
+    //const astPackageJson = JSON.parse(tempPackageJsonarr);
     const version = versionFinder(JSON.parse(tempPackageJsonarr));
+    console.log(version)
 
     return 'Compiled List';
   }catch(err){
