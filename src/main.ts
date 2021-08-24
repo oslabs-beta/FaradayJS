@@ -27,7 +27,6 @@ const createWindow = (): void => {
   //win.loadURL(`file://${path.join(__dirname, "index.html")}`)
 
 
-
   ipcMain.on('main:open-file', async (event, payload)=>{
     try{
       const result = await OpenFile();
@@ -41,12 +40,8 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('main:test', (event, payload)=>{
-    //console.log('this is main')
-    //dialog.showErrorBox('Hello', "This is a test")
-    //win.webContents.on('dom-ready', ()=>{
-      event.sender.send('preload:test', 'sdsdsdsdsdsd')
-      //win.webContents.send('preload:test', 'dfjifodff')
-    // })
+    event.sender.send('preload:test', 'sdsdsdsdsdsd')
+
   })
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
@@ -58,128 +53,7 @@ const createWindow = (): void => {
 
 
   const isMac = process.platform === 'darwin'  
-
-  const template: any = [
-    {
-      label: 'File',
-      submenu: [
-        {
-          label: "Open File",
-          accelerator: 'CmdOrCtrl+O',
-          click: ()=>{
-             console.log('opened file')
-          }
-        },
-        {label: "Open Folder"},
-        isMac ? { role: 'close' } : { role: 'quit' },
-        {type:'separator'},
-        {
-          label: 'test-1',
-          submenu: [{label: 'test-2'}]
-        }
-      ]
-    },
-    ...(isMac ? [{
-      label: app.name,
-      submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
-      ]
-    }] : []),
-    // { role: 'editMenu' }
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        ...(isMac ? [
-          { role: 'pasteAndMatchStyle' },
-          { role: 'delete' },
-          { role: 'selectAll' },
-          { type: 'separator' },
-          {
-            label: 'Speech',
-            submenu: [
-              { role: 'startSpeaking' },
-              { role: 'stopSpeaking' }
-            ]
-          }
-        ] : [
-          { role: 'delete' },
-          { type: 'separator' },
-          { role: 'selectAll' }
-        ])
-      ]
-    },
-    // { role: 'viewMenu' }
-    {
-      label: 'View',
-      submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
-      ]
-    },
-    // { role: 'windowMenu' }
-    {
-      label: 'Window',
-      submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
-        ...(isMac ? [
-          { type: 'separator' },
-          { role: 'front' },
-          { type: 'separator' },
-          { role: 'window' }
-        ] : [
-          { role: 'close' }
-        ])
-      ]
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click: async () => {
-            const { shell } = require('electron')
-            await shell.openExternal('https://electronjs.org')
-          }
-        }
-      ]
-    },
-    {
-      label: 'Developer',
-      submenu:[
-        {
-          label: 'Toggle Developer Tools', 
-          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-          click: ()=>{
-            win.webContents.toggleDevTools();
-          }
-        }
-      ]
-    }
-  ]
-  
-
+  const template: any = menuTemplate(win);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
@@ -212,7 +86,6 @@ const OpenFile = async () =>{
 
 const OpenFolder = async()=>{
   try{
-    
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     })
@@ -246,7 +119,7 @@ const OpenFolder = async()=>{
             !(dirMain + "/" + dirNext).includes("dist") && // Hard coded to ignore dist and build folder. Gotta find a way to not hard code
             !(dirMain + "/" + dirNext).includes("build")
           ){
-            console.log(dirMain + "/" + dirNext)
+            //console.log(dirMain + "/" + dirNext)
             folderLoc.push(dirMain+"/"+dirNext)
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
             temparr.push(fileContent)
@@ -254,8 +127,8 @@ const OpenFolder = async()=>{
             const fileContentHTML = fs.readFileSync(dirMain + "/" + dirNext).toString();
             tempHTMLarr.push(fileContentHTML)
           }else if ((dirMain + "/" + dirNext).includes('package.json')){
-            //const fileContentPackageJson = await fs.readFileSync(dirMain + "/" + dirNext).toString();
-            //tempPackageJsonarr = fileContentPackageJson
+            const fileContentPackageJson = await fs.readFileSync(dirMain + "/" + dirNext).toString();
+            tempPackageJsonarr = fileContentPackageJson
           }
         }
       })
@@ -269,18 +142,16 @@ const OpenFolder = async()=>{
 
     for(let i = 0; i<temparr.length-1;i++){
         const ast = parser(temparr[i])
-      //  ast.location = folderLoc[i]
-        //console.log(ast)
-        //resultObj = await traverser(ast)
-        //console.log(resultObj)
-        //checker(resultObj, 10) // [config, your electron config, default safe one]
+       ast.location = folderLoc[i]
+        resultObj = await traverser(ast)
+        checker(resultObj, 10) 
     }
     for(let i = 0; i<tempHTMLarr.length; i++){
       const astHTML = htmlparser(tempHTMLarr[i])
     }
 
-    //const astPackageJson = JSON.parse(tempPackageJsonarr);
-    //const version = versionFinder(JSON.parse(tempPackageJsonarr));
+    const version = versionFinder(JSON.parse(tempPackageJsonarr));
+    console.log(version)
 
     return 'Compiled List';
   }catch(err){

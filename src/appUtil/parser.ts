@@ -6,12 +6,12 @@ export const parser = (obj: string) => {
     jsx: true,
   };
   const parsed = parse.parse(obj, options);
-  console.log(parsed)
+  //console.log(parsed)
   return parsed;
 };
 
 export const htmlparser = (obj: string) => {
-  //const dom = htmlparser2.parseDocument(obj); // This way you can see the whole DOM
+  //const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
   let tempCache: { [key: string]: boolean} = {};
 
   const parsed = new htmlparser2.Parser({
