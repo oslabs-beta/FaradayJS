@@ -34,16 +34,14 @@ contextBridge.exposeInMainWorld(
     }
 )
 
-<<<<<<< HEAD
 // ipcRenderer.on('preload:open-file', (event, arg) => {
 //     console.log('preload:open-file')
 //     //@ts-expect-error
 //     document.getElementById('hello').innerHTML = arg
 // })
-=======
-ipcRenderer.on('preload:open-folder', (event, arg)=>{
-    console.log('arg is ', arg);
-    //@ts-expect-error
-    document.getElementById('results').innerHTML = arg;
-})
->>>>>>> 438ffe18859ea9286b19f2390a28c169f8d5dde7
+
+// ipcRenderer.on('preload:open-folder', (event, arg)=>{
+//     console.log('arg is ', arg);
+//     //@ts-expect-error
+//     document.getElementById('results').innerHTML = arg;
+// })

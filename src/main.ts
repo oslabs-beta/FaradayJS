@@ -109,7 +109,7 @@ const OpenFolder = async () => {
       returnValue.packageJsonContents = '';
       const readDirMain = fs.readdirSync(dirMain);
 
-      readDirMain.forEach((dirNext: string) => {
+      readDirMain.forEach(async (dirNext: string) => {
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
         } else {
@@ -186,11 +186,12 @@ const processCodeBase = async (codebaseObj:any) => {
       const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
         // console.log("ast here");
         traversedAstNodes = traverser(ast);
-
-        rawTestResults.push({
-           fileResults: checker(traversedAstNodes, version),
-           filename: codebaseObj.fileObjectArray[i].fileName,
-         });
+        if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
+          rawTestResults.push({
+             fileResults: checker(traversedAstNodes, version),
+             filename: codebaseObj.fileObjectArray[i].fileName,
+           });
+        }
          //console.log("checked this one");
    }
    console.log('Raw: ', rawTestResults);

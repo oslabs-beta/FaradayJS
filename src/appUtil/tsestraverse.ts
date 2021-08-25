@@ -18,6 +18,13 @@ const traverser = async (ast:any) =>{
           end: node.loc.end.line,
         }
       }
+      if(node.type == 'webpre'){
+        cache[node.key.name] =  { 
+          value: node.value.value,
+          start: node.loc.start.line,
+          end: node.loc.end.line,
+        }
+      }
     },
     keys:{
       'ClassProperty': ['key', 'value']
