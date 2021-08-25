@@ -11,24 +11,17 @@ const NavBar = () =>{
   const handleClick = () => {
   //@ts-expect-error
     API.incrementCount();
-    //bridgeAPI.incrementCount();
 
     //@ts-expect-error
     API.receiveCount("preload:test", (data) => {
       console.log(`Received ${data} from main process`);
       
   });
-  //   bridgeAPI.receiveCount("preload:test", (data) => {
-  //     console.log(`Received ${data} from main process`);
-  // });
   }
 
   const handleClickOpenFile = () =>{
     //@ts-expect-error
-    bridgeAPI.openFile();
-
-    //@ts-expect-error
-    bridgeAPI.receiveData()
+    bridgeAPI.openFile();  
   }
 
   const handleClickOpenFolder = () =>{
@@ -36,7 +29,9 @@ const NavBar = () =>{
     bridgeAPI.openFolder();
 
     //@ts-expect-error
-    bridgeAPI.receiveData()
+    bridgeAPI.receiveData('preload:open-folder', (data)=>{
+      console.log(data)
+    })
   }
 
 

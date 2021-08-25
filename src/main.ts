@@ -101,7 +101,6 @@ const OpenFolder = async()=>{
     const readAllFolder = (dirMain:string) =>{
       const readDirMain = fs.readdirSync(dirMain);
       
-
       readDirMain.forEach(async (dirNext:string)=>{
         //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
@@ -139,10 +138,9 @@ const OpenFolder = async()=>{
 
     let resultObj;
 
-
-    for(let i = 0; i<temparr.length-1;i++){
+    for(let i = 0; i<temparr.length;i++){
         const ast = parser(temparr[i])
-       ast.location = folderLoc[i]
+        //ast.location = folderLoc[i]
         resultObj = await traverser(ast)
         checker(resultObj, 10) 
     }

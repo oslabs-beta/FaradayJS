@@ -15,7 +15,6 @@ contextBridge.exposeInMainWorld(
                 ipcRenderer.once(channel, (event, ...args)=>func(...args))
             }
         }
-
     }
 )
 
@@ -35,19 +34,8 @@ contextBridge.exposeInMainWorld(
     }
 )
 
-ipcRenderer.on('preload:open-file', (event, arg) => {
-    console.log('preload:open-file')
-    //@ts-expect-error
-    document.getElementById('hello').innerHTML = arg
-})
-
-// ipcRenderer.on('preload:test', (event, arg)=>{
-//     console.log('this is preload3')
-//     //dialog.showErrorBox('Hello', "This is a test")
+// ipcRenderer.on('preload:open-file', (event, arg) => {
+//     console.log('preload:open-file')
 //     //@ts-expect-error
-//     document.getElementById('hello').innerHTML = "dasdsdsds5gh45g5"
+//     document.getElementById('hello').innerHTML = arg
 // })
-
-ipcRenderer.on('preload:open-folder', (event, arg)=>{
-    console.log(arg)
-})
