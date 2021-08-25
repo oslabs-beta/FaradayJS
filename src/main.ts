@@ -12,15 +12,18 @@ const isDev = require('electron-is-dev')
 
 let win: BrowserWindow;
 
+const options = {
+  width: 800,
+  height: 600,
+  webPreferences: {
+    nodeIntegration: true,
+    preload: path.join(__dirname, "preload.js")
+  }
+}
+
 const createWindow = (): void => {
-  win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, "preload.js")
-    }
-  });
+  win = new BrowserWindow(options
+  );
 
   //Both methods work
   win.loadFile(path.join(__dirname, './index.html'));
@@ -47,9 +50,13 @@ const createWindow = (): void => {
 
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
-
-      const result = await OpenFolder();
-      event.sender.send('preload:open-folder', result)
+    try{
+      const rawResult: any = await OpenFolder();
+      const finalResult = JSON.stringify(interpretRawTestResults(rawResult));
+      event.sender.send('preload:open-folder', finalResult);
+    } catch (e) {
+      console.log('Open Folder Error: ', e);
+    }
 
   })
 
@@ -66,7 +73,7 @@ app.on('ready', createWindow);
 
 
 // Open File Function
-const OpenFile = async () =>{
+const OpenFile = async () => {
   // Opens file dialog looking for markdown extension
   const files: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
     properties: ['openFile'],
@@ -77,85 +84,142 @@ const OpenFile = async () =>{
   })
 
   // If no files
-  if(!files) return;
+  if (!files) return;
 
-  const file = await files ; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
-  if(file) { // !! ensures the resulting type is a boolean
+  const file = await files; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
+  if (file) { // !! ensures the resulting type is a boolean
     const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
     return fileContent;
-  }; 
+  };
 }
 
-const OpenFolder = async()=>{
-  try{
+const OpenFolder = async () => {
+  try {
+
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
-    })
-    if(!folders) return;
-    
-    const temparr:string[] = [];
-    const tempHTMLarr:string[] = [];
-    let tempPackageJsonarr:string = '';
-    const folderLoc:string[] = [];
+    });
 
+    if (!folders) return;
+
+    
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-      
-    const readAllFolder = (dirMain:string) =>{
+        
+    const readAllFolder = async (dirMain: string) => {
+      const returnValue: any = {};
+      returnValue.fileObjectArray = [];
+      returnValue.packageJsonContents = '';
       const readDirMain = fs.readdirSync(dirMain);
-      
-      readDirMain.forEach(async (dirNext:string)=>{
-        //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
+
+      readDirMain.forEach(async (dirNext: string) => {
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
-        }else{
-          if(
+        } else {
+          if (
             ((dirMain + "/" + dirNext).includes('.js') ||
             (dirMain + "/" + dirNext).includes('.jsx') ||
             (dirMain + "/" + dirNext).includes('.ts') ||
-            (dirMain + "/" + dirNext).includes('.tsx')) &&
+            (dirMain + "/" + dirNext).includes('.tsx') ||
+            (dirMain + "/" + dirNext).includes('.html')) &&
             !(dirMain + "/" + dirNext).includes(".vscode") &&
             !(dirMain + "/" + dirNext).includes(".json") && 
             !(dirMain + "/" + dirNext).includes("node_modules") &&
             !(dirMain + "/" + dirNext).includes(".txt") &&
-            !(dirMain + "/" + dirNext).includes("dist") && // Hard coded to ignore dist and build folder. Gotta find a way to not hard code
+            !(dirMain + "/" + dirNext).includes("dist") &&
             !(dirMain + "/" + dirNext).includes("build")
-          ){
-            //console.log(dirMain + "/" + dirNext)
-            folderLoc.push(dirMain+"/"+dirNext)
+            ) {
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
-            temparr.push(fileContent)
-          }else if((dirMain + "/" + dirNext).includes('.html')){
-            const fileContentHTML = fs.readFileSync(dirMain + "/" + dirNext).toString();
-            tempHTMLarr.push(fileContentHTML)
-          }else if ((dirMain + "/" + dirNext).includes('package.json')){
-            const fileContentPackageJson = await fs.readFileSync(dirMain + "/" + dirNext).toString();
-            tempPackageJsonarr = fileContentPackageJson
+            const fileObj: any = {
+              path: dirMain + "/",
+              fileName: dirNext,
+              contents: fileContent
+            }
+            returnValue.fileObjectArray.push(fileObj);
+          } else if ((dirMain + "/" + dirNext).includes('package.json')){
+            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "/" + dirNext).toString();
           }
         }
-      })
-      return temparr;
+      }
+      
+      );
+      return returnValue;
     }
 
-    await readAllFolder(folder.filePaths[0])
 
-    let resultObj;
+    //////////
+  //   await readAllFolder(folder.filePaths[0])
 
-    for(let i = 0; i<temparr.length;i++){
-        const ast = parser(temparr[i])
-        //ast.location = folderLoc[i]
-        resultObj = await traverser(ast)
-        checker(resultObj, 10) 
-    }
-    for(let i = 0; i<tempHTMLarr.length; i++){
-      const astHTML = htmlparser(tempHTMLarr[i])
-    }
+  //   let resultObj;
 
-    const version = versionFinder(JSON.parse(tempPackageJsonarr));
-    console.log(version)
+  //   for(let i = 0; i<temparr.length;i++){
+  //       const ast = parser(temparr[i])
+  //       //ast.location = folderLoc[i]
+  //       resultObj = await traverser(ast)
+  //       checker(resultObj, 10) 
+  //   }
+  //   for(let i = 0; i<tempHTMLarr.length; i++){
+  //     const astHTML = htmlparser(tempHTMLarr[i])
+  //   }
 
-    return 'Compiled List';
-  }catch(err){
-    console.log(err)
+  //   const version = versionFinder(JSON.parse(tempPackageJsonarr));
+  //   console.log(version)
+
+  //   return 'Compiled List';
+    
+  // }catch(err){
+  //   console.log(err)
+  //////////
+
+    return await readAllFolder(folder.filePaths[0]);
+  } catch(err){
+    console.log('Open Folder Error: ', err);
   }
 }
 
+const processCodeBase = async (codebaseObj:any) => {
+  try {
+  const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
+
+   let rawTestResults: any[] = [];
+   let traversedAstNodes: any = {};
+   for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
+     //   //console.log(parser(result[i]))
+     //   if(!result[i].includes("react")){
+      const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
+        // console.log("ast here");
+        traversedAstNodes = traverser(ast);
+        if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
+          rawTestResults.push({
+             fileResults: checker(traversedAstNodes, version),
+             filename: codebaseObj.fileObjectArray[i].fileName,
+           });
+        }
+         //console.log("checked this one");
+   }
+   console.log('Raw: ', rawTestResults);
+   return rawTestResults;
+  }catch(err){
+    console.log('ProcessCodeBase: ', err)
+  }
+
+} 
+
+
+const interpretRawTestResults = (rawResults: any[]) => {
+  const finalTestResults: any = {};
+
+  // Step 1: consolidate results by test
+  rawResults.forEach(test => {
+    if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
+      finalTestResults[test.fileResults.testProp] = test;
+    } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
+      if (test.fileResults.status === 'fail') {
+        finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
+      }
+    }
+  });
+  // Step 3: Push final result object to finalTestResults
+  // Step 4: return finalTestResults array to pass to react rendering side of application
+ // console.log(finalTestResults);
+  return finalTestResults;
+}
