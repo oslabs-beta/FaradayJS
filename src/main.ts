@@ -3,11 +3,12 @@ import parser from './appUtil/parser'
 //import traverser from './appUtil/traverse'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
+import transformer from 'jscodeshift';
+import API from 'jscodeshift';
 
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
-const bannana = ''
 
 let win: BrowserWindow;
 
@@ -221,31 +222,32 @@ const OpenFolder = async()=>{
     })
     if(!folders) return;
     
-    const temparr:string[] = [];
+    // const temparr:string[] = [];
 
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-    const readAllFolder = (dirMain:string) =>{
-      const readDirMain = fs.readdirSync(dirMain);
+    transformer(folder, API)
+    // const readAllFolder = (dirMain:string) =>{
+      // const readDirMain = fs.readdirSync(dirMain);
       
       //console.log(dirMain);
       //console.log(readDirMain);
 
-      readDirMain.forEach((dirNext:string)=>{
-        //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
-        if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
-          readAllFolder(dirMain + "/" + dirNext);
-        }else{
-          if((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))){
-            //console.log(dirMain+"/"+dirNext)
-            const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
-            temparr.push(fileContent)
-          }
-        }
-      })
-      return temparr;
-    }
+    //   readDirMain.forEach((dirNext:string)=>{
+    //     //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
+    //     if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
+    //       readAllFolder(dirMain + "/" + dirNext);
+    //     }else{
+    //       if((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))){
+    //         //console.log(dirMain+"/"+dirNext)
+    //         const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
+    //         temparr.push(fileContent)
+    //       }
+    //     }
+    //   })
+    //   return temparr;
+    // }
 
-    const result = await readAllFolder(folder.filePaths[0])
+    // const result = await readAllFolder(folder.filePaths[0])
     
     
     // let resultObj;
@@ -260,16 +262,16 @@ const OpenFolder = async()=>{
     //   }
     // }
 
-    const ast = parser(result[0])
+    // const ast = parser(result[0])
     //const resultObj = await traverser(ast, 0);
     //console.log(resultObj)
 
-    const resultObj = await traverser(ast);
+    // const resultObj = await traverser(ast);
 
     // resultObj is object, 10 is version
     //console.log(checker(resultObj, 10)) // This returns array [config, your electron config, default safe one]
 
-    return result;
+    // return result;
   }catch(err){
     console.log(err)
   }
