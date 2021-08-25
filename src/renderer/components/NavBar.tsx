@@ -3,10 +3,6 @@ import React, { useState, useEffect } from 'react';
 
 
 const NavBar = () =>{
-
-  useEffect(() => {
-    
-  },)
   
   const handleClick = () => {
   //@ts-expect-error

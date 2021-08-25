@@ -152,6 +152,7 @@ const OpenFolder = async()=>{
     console.log(version)
 
     return 'Compiled List';
+    
   }catch(err){
     console.log(err)
   }
