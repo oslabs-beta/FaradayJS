@@ -38,6 +38,7 @@ const NavBar = () =>{
       <button id = 'open-folder' onClick = {handleClickOpenFolder}>Open Folder</button>
       <span id = 'demo'>dddd</span>
       <span id = 'hello'>Hello</span>
+      <h4 id='results'>Results...</h4>
     </div>
   )
 }
