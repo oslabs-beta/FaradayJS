@@ -3,22 +3,16 @@ const { contextBridge, ipcRenderer, dialog } = require('electron')
 contextBridge.exposeInMainWorld(
     'bridgeAPI',
     {
-        // incrementCount: () => {
-        //     ipcRenderer.send('main:test', {})
-        // },
         openFile: () =>{
             ipcRenderer.send('main:open-file')
         },
         openFolder: ()=>{
             ipcRenderer.send('main:open-folder')
         },
-        // receiveCount: (channel:any, func:any) =>{
-        //     let validChannels = ["preload:test"];
-        //     if (validChannels.includes(channel)) {
-        //         // Deliberately strip event as it includes `sender` 
-        //         ipcRenderer.on(channel, (event, ...args) => func(...args));
-        //     }
-        // }
+        incrementCount:()=>{
+            ipcRenderer.send('main:test',{})
+            //ipcRenderer.removeAllListeners('main:test')
+        },
     }
 )
 
@@ -38,6 +32,7 @@ contextBridge.exposeInMainWorld(
         }
     }
 )
+
 
 ipcRenderer.on('preload:open-file', (event, arg) => {
     console.log('preload:open-file')

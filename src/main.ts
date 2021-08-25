@@ -41,13 +41,14 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('main:test', (event, payload)=>{
-    //console.log('this is main')
-    //dialog.showErrorBox('Hello', "This is a test")
-    //win.webContents.on('dom-ready', ()=>{
-      event.sender.send('preload:test', 'sdsdsdsdsdsd')
-      //win.webContents.send('preload:test', 'dfjifodff')
-    // })
+    //event.sender.send('preload:test', 'sdsdsdsdsdsd')
+    event.sender.send('preload:test', 'fkfkfkfk')
+
+    //ipcMain.removeAllListeners('main:test')
+
   })
+
+
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
 
