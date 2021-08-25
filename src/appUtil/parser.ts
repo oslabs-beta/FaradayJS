@@ -8,7 +8,6 @@ export const parser = async (obj: string) => {
       loc: true,
     };
     const parsed = await parse.parse(obj, options);
-    //console.log(parsed)
     return parsed;
   } catch (e) {
     console.log('Parse Error: ', e);

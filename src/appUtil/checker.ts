@@ -1,9 +1,8 @@
 import defaultConfig from './defaultConfig'
 
-
 const checker = (propertiesObj:{[key:string]:any}, version:number) =>{
+  console.log(version)
   const versionDefaults = Object.values(defaultConfig)[2]      
-
   const testProp = 'webSecurity';
   const failValue:boolean = false;
   const testResult = {

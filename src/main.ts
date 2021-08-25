@@ -52,8 +52,9 @@ const createWindow = (): void => {
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
       const rawResult: any = await OpenFolder();
-      const finalResult = JSON.stringify(interpretRawTestResults(rawResult));
-      event.sender.send('preload:open-folder', finalResult);
+      const processedResult = processCodeBase(rawResult)
+      //const finalResult = JSON.stringify(interpretRawTestResults(rawResult));
+      //event.sender.send('preload:open-folder', finalResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
     }
@@ -104,11 +105,12 @@ const OpenFolder = async () => {
 
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-        
+    const returnValue: any = {};
+    returnValue.fileObjectArray = [];
+    returnValue.packageJsonContents = '';
+
     const readAllFolder = async (dirMain: string) => {
-      const returnValue: any = {};
-      returnValue.fileObjectArray = [];
-      returnValue.packageJsonContents = '';
+      
       const readDirMain = fs.readdirSync(dirMain);
 
       readDirMain.forEach(async (dirNext: string) => {
@@ -127,7 +129,7 @@ const OpenFolder = async () => {
             !(dirMain + "/" + dirNext).includes(".txt") &&
             !(dirMain + "/" + dirNext).includes("dist") &&
             !(dirMain + "/" + dirNext).includes("build")
-            ) {
+            ){
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
             const fileObj: any = {
               path: dirMain + "/",
@@ -139,9 +141,7 @@ const OpenFolder = async () => {
             returnValue.packageJsonContents = await fs.readFileSync(dirMain + "/" + dirNext).toString();
           }
         }
-      }
-      
-      );
+      });
       return returnValue;
     }
 
@@ -169,7 +169,6 @@ const OpenFolder = async () => {
   // }catch(err){
   //   console.log(err)
   //////////
-
     return await readAllFolder(folder.filePaths[0]);
   } catch(err){
     console.log('Open Folder Error: ', err);
@@ -179,24 +178,32 @@ const OpenFolder = async () => {
 const processCodeBase = async (codebaseObj:any) => {
   try {
   const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
-
    let rawTestResults: any[] = [];
    let traversedAstNodes: any = {};
    for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
+     if(codebaseObj.fileObjectArray[i].fileName.includes('.html')){
+      htmlparser(codebaseObj.fileObjectArray[i].contents)
+     }else{
+      const ast: any = await parser(codebaseObj.fileObjectArray[i].contents);
+      traversedAstNodes = await traverser(ast);
+      if(traversedAstNodes.hasOwnProperty('webPreferences')){
+        checker(traversedAstNodes, version)
+      }
+     }
      //   //console.log(parser(result[i]))
      //   if(!result[i].includes("react")){
-      const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
+      //const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
         // console.log("ast here");
-        traversedAstNodes = traverser(ast);
-        if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
-          rawTestResults.push({
-             fileResults: checker(traversedAstNodes, version),
-             filename: codebaseObj.fileObjectArray[i].fileName,
-           });
-        }
+        //traversedAstNodes = traverser(ast);
+        // if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
+        //   rawTestResults.push({
+        //      fileResults: checker(traversedAstNodes, version),
+        //      filename: codebaseObj.fileObjectArray[i].fileName,
+        //    });
+        // }
          //console.log("checked this one");
    }
-   console.log('Raw: ', rawTestResults);
+   //console.log('Raw: ', rawTestResults);
    return rawTestResults;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
