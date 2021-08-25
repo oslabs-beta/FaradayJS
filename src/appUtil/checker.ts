@@ -1,8 +1,8 @@
 import defaultConfig from './defaultConfig'
 
 
-const checker = (propertiesObj:{[key:string]:any}, version:number) =>{
-  const versionDefaults = Object.values(defaultConfig)[2]      
+const checker = (propertiesObj:{[key:string]:any}, version:number) => {
+  const versionDefaults = Object.values(defaultConfig)[2];      
   // let tempArr = [];
   // for(let i = 0; i<Object.keys(node).length; i++){
   //   if(JSON.stringify(Object.keys(keyFromDefaultConfigOver10_0_0)).includes(JSON.stringify(Object.keys(node)[i]))){
@@ -13,7 +13,7 @@ const checker = (propertiesObj:{[key:string]:any}, version:number) =>{
   // }
   // return tempArr;
 
-  // Note for later: if multiple BrowserWindow configurations are defined in the same file, then current implementation would overwrite dublicate properties.
+  // Note for later: if multiple BrowserWindow configurations are defined in the same file, then current implementation would overwrite duplicate properties.
 
   // declare const webSecurity string at testProp
   // declare const failValue equal to value that would mean they failed the test
@@ -46,10 +46,10 @@ const checker = (propertiesObj:{[key:string]:any}, version:number) =>{
   } else if (versionDefaults[testProp] === failValue) {
     testResult.status = 'fail by default';
   } else { //if (versionDefaults[testProp] === !failValue) {
-    testResult.status = 'pass by default'
+    testResult.status = 'pass by default';
   }
   return testResult;
-}
+};
 
 
 export default checker

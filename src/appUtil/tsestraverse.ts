@@ -2,9 +2,10 @@ const estraverse = require('estraverse')
 // const { BoolAstNodeWLocKelsey } = require('../types');
 
 
-const traverser = (ast:any) =>{
+const traverser = async (ast:any) =>{
+  try {
   let cache:{[key:string]: object} = {}
-  estraverse.traverse(ast,{
+  await estraverse.traverse(ast, {
     enter:function(node:any, parent:any){
       if(node.type=='VariableDeclaration'){
         return estraverse.VisitorOption.skip;
@@ -12,7 +13,7 @@ const traverser = (ast:any) =>{
     },
     leave: function (node:any, parent:any) {
       if (node.type == 'Property') {
-        console.log(node);
+        // console.log(node);
         cache[node.key.name] =  { 
           value: node.value.value,
           start: node.loc.start.line,
@@ -20,8 +21,11 @@ const traverser = (ast:any) =>{
         }
       }
     }
-  })
+  });
   return cache;
+} catch (e) {
+  console.log('Traverse Error: ', e);
+}
 }
 
 export default traverser

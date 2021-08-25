@@ -49,9 +49,13 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
-
-      const result = await OpenFolder();
-      event.sender.send('preload:open-folder', result)
+    try{
+      const rawResult: any = await OpenFolder();
+      const finalResult = JSON.stringify(interpretRawTestResults(rawResult));
+      event.sender.send('preload:open-folder', finalResult);
+    } catch (e) {
+      console.log('Open Folder Error: ', e);
+    }
 
   })
 
@@ -189,7 +193,7 @@ app.on('ready', createWindow);
 
 
 // Open File Function
-const OpenFile = async () =>{
+const OpenFile = async () => {
   // Opens file dialog looking for markdown extension
   const files: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
     properties: ['openFile'],
@@ -200,75 +204,96 @@ const OpenFile = async () =>{
   })
 
   // If no files
-  if(!files) return;
+  if (!files) return;
 
-  const file = await files ; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
-  if(file) { // !! ensures the resulting type is a boolean
+  const file = await files; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
+  if (file) { // !! ensures the resulting type is a boolean
     const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
     return fileContent;
-  }; 
+  };
 }
 
-const OpenFolder = async()=>{
-  try{
-    
+const OpenFolder = async () => {
+  try {
+
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
-    })
-    if(!folders) return;
-    
-    const temparr:string[] = [];
+    });
+
+    if (!folders) return;
+
+    const temparr: any[] = [];
 
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-    const readAllFolder = (dirMain:string) =>{
+
+    //console.log("made it this far.....");
+
+    const readAllFolder = async (dirMain: string) => {
       const readDirMain = fs.readdirSync(dirMain);
-      
+
       //console.log(dirMain);
       //console.log(readDirMain);
 
-      readDirMain.forEach((dirNext:string)=>{
+      readDirMain.forEach((dirNext: string) => {
         //console.log(dirNext, fs.lstatSync(dirMain + "/" + dirNext).isDirectory());
         if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
           readAllFolder(dirMain + "/" + dirNext);
-        }else{
-          if((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))){
+        } else {
+          if ((!(dirMain + "/" + dirNext).includes('.eslintrc')) && (!(dirMain + "/" + dirNext).includes('.html'))) {
             //console.log(dirMain+"/"+dirNext)
             const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
-            temparr.push(fileContent)
+            const fileObj: any = {
+              name: dirNext,
+              contents: fileContent
+            }
+            temparr.push(fileObj);
           }
         }
         //console.log(dirMain+"/"+dirNext)
-      })
+      });
       return temparr;
     }
 
-    const result = await readAllFolder(folder.filePaths[0])
-    
-    
-    // let resultObj;
-    // for(let i = 0; i<temparr.length;i++){
-    //   //console.log(parser(result[i]))
-    //   if(!result[i].includes("react")){
-    //     const ast = parser(result[i])
-    //     //console.log(ast)
-    //     resultObj = await traverser(ast, 0)
-    //     //console.log(resultObj)
-    //     console.log(checker(resultObj, 10))
-    //   }
-    // }
+    const result: any[] = await readAllFolder(folder.filePaths[0]);
+   // console.log("made it this far too.....");
 
-    const ast = parser(result[0])
-    //const resultObj = await traverser(ast, 0);
-    //console.log(resultObj)
-
-    const resultObj = await traverser(ast);
-    console.log(resultObj);
-    // resultObj is object, 10 is version
-    console.log(checker(resultObj, 10)) // This returns test results object
-
-    return result;
-  }catch(err){
-    console.log(err)
+    let rawTestResults: any[] = [];
+    let resultObj: any = {};
+    for (let i = 0; i < result.length; i++) {
+      //   //console.log(parser(result[i]))
+      //   if(!result[i].includes("react")){
+          const ast: any = parser(result[i].contents);
+         // console.log("ast here");
+          resultObj = traverser(ast);
+          rawTestResults.push({
+            fileResults: checker(resultObj, 10),
+            filename: result[i].name,
+          });
+          //console.log("checked this one");
+    }
+    console.log('Raw: ', rawTestResults);
+    return rawTestResults;
+  } catch(err) {
+    console.log(err);
+    return [];
   }
 }
 
+const interpretRawTestResults = (rawResults: any[]) => {
+  const finalTestResults: any = {};
+
+  // Step 1: consolidate results by test
+  rawResults.forEach(test => {
+    if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
+      finalTestResults[test.fileResults.testProp] = test;
+    } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
+      if (test.fileResults.status === 'fail') {
+        finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
+      }
+    }
+  });
+  // Step 3: Push final result object to finalTestResults
+  // Step 4: return finalTestResults array to pass to react rendering side of application
+ // console.log(finalTestResults);
+  return finalTestResults;
+}

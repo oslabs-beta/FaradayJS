@@ -29,5 +29,7 @@ ipcRenderer.on('preload:test', (event, arg)=>{
 })
 
 ipcRenderer.on('preload:open-folder', (event, arg)=>{
-    console.log(arg)
+    console.log('arg is ', arg);
+    //@ts-expect-error
+    document.getElementById('results').innerHTML = arg;
 })
