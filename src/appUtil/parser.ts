@@ -1,7 +1,7 @@
-const parse = require('@typescript-eslint/typescript-estree');
-const htmlparser2 = require('htmlparser2');
+import * as parse from '@typescript-eslint/typescript-estree'
+//const htmlparser2 = require('htmlparser2');
 
-export const parser = async (obj: string) => {
+const parser = async (obj: string) => {
   try {
     const options = {
       jsx: true,
@@ -13,35 +13,37 @@ export const parser = async (obj: string) => {
     console.log('Parse Error: ', e);
   }
 };
+// 
+// const htmlparser = (obj: string) => {
+//   //const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
+//   let tempCache: { [key: string]: boolean } = {};
 
-export const htmlparser = (obj: string) => {
-  //const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
-  let tempCache: { [key: string]: boolean } = {};
+//   const parsed = new htmlparser2.Parser({
+//     onopentag(
+//       name: string,
+//       attribute: { [key: string]: string | number | boolean | undefined | null }
+//     ) {
+//       if (
+//         name === 'webview' &&
+//         attribute.hasOwnProperty('disablewebsecurity')
+//       ) {
+//         return (tempCache['disablewebsecurity'] = true);
+//       } else if (
+//         name === 'webview' &&
+//         !attribute.hasOwnProperty('disablewebsecurity')
+//       ) {
+//         return (tempCache['disablewebsecurity'] = false);
+//       }
+//     },
+//     ontext(text: string) {},
+//     onclosetag(tagname: string) {},
+//   });
 
-  const parsed = new htmlparser2.Parser({
-    onopentag(
-      name: string,
-      attribute: { [key: string]: string | number | boolean | undefined | null }
-    ) {
-      if (
-        name === 'webview' &&
-        attribute.hasOwnProperty('disablewebsecurity')
-      ) {
-        return (tempCache['disablewebsecurity'] = true);
-      } else if (
-        name === 'webview' &&
-        !attribute.hasOwnProperty('disablewebsecurity')
-      ) {
-        return (tempCache['disablewebsecurity'] = false);
-      }
-    },
-    ontext(text: string) {},
-    onclosetag(tagname: string) {},
-  });
+//   parsed.write(obj);
 
-  parsed.write(obj);
+//   parsed.end();
 
-  parsed.end();
+//   return tempCache;
+// };
 
-  return tempCache;
-};
+export default parser;
