@@ -20,7 +20,7 @@ const App = () => {
         </div>
       </div>
     </div>
-    <div className="sm:container sm :mx-auto px-4 overflow-contain" id="hello"/>
+    <div className="sm:container sm :mx-auto px-4 overflow-contain border-double border-4 border-DEFAULT-peach" id="hello"/>
     </div>
   )
 }
