@@ -1,0 +1,7 @@
+{
+  "parser": "@typescript-eslint/typescript-estree",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/rule-name": "error"
+  }
+}
