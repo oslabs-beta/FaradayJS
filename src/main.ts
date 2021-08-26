@@ -52,9 +52,10 @@ const createWindow = (): void => {
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
       const rawResult: any = await OpenFolder();
-      const processedResult = processCodeBase(rawResult)
-      //const finalResult = JSON.stringify(interpretRawTestResults(rawResult));
-      //event.sender.send('preload:open-folder', finalResult);
+      const processedResult = await processCodeBase(rawResult);
+      const jsondResult = JSON.stringify(processedResult);
+      console.log('ProcessedResult: ', processedResult);
+      event.sender.send('preload:open-folder', processedResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
     }
@@ -177,19 +178,23 @@ const OpenFolder = async () => {
 
 const processCodeBase = async (codebaseObj:any) => {
   try {
-  const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
-   let rawTestResults: any[] = [];
-   let traversedAstNodes: any = {};
-   for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
-     if(codebaseObj.fileObjectArray[i].fileName.includes('.html')){
-      htmlparser(codebaseObj.fileObjectArray[i].contents)
-     }else{
-      const ast: any = await parser(codebaseObj.fileObjectArray[i].contents);
-      traversedAstNodes = await traverser(ast);
-      if(traversedAstNodes.hasOwnProperty('webPreferences')){
-        checker(traversedAstNodes, version)
+    const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
+    let rawTestResults: any[] = [];
+    let traversedAstNodes: any = {};
+    for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
+      if(codebaseObj.fileObjectArray[i].fileName.includes('.html')){
+        htmlparser(codebaseObj.fileObjectArray[i].contents)
+      }else{
+        const ast: any = await parser(codebaseObj.fileObjectArray[i].contents);
+        traversedAstNodes = await traverser(ast);
+        if(traversedAstNodes.hasOwnProperty('webPreferences')){
+          rawTestResults.push({
+            fileResults: checker(traversedAstNodes, version),
+            fileName: codebaseObj.fileObjectArray[i].fileName,
+            filePath: codebaseObj.fileObjectArray[i].path
+          });
+        }
       }
-     }
      //   //console.log(parser(result[i]))
      //   if(!result[i].includes("react")){
       //const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
@@ -203,7 +208,7 @@ const processCodeBase = async (codebaseObj:any) => {
         // }
          //console.log("checked this one");
    }
-   //console.log('Raw: ', rawTestResults);
+   console.log('Raw After ProcessCodeBase: ', rawTestResults);
    return rawTestResults;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
@@ -212,21 +217,21 @@ const processCodeBase = async (codebaseObj:any) => {
 } 
 
 
-const interpretRawTestResults = (rawResults: any[]) => {
-  const finalTestResults: any = {};
+// const interpretRawTestResults = (rawResults: any[]) => {
+//   const finalTestResults: any = {};
 
-  // Step 1: consolidate results by test
-  rawResults.forEach(test => {
-    if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
-      finalTestResults[test.fileResults.testProp] = test;
-    } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
-      if (test.fileResults.status === 'fail') {
-        finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
-      }
-    }
-  });
-  // Step 3: Push final result object to finalTestResults
-  // Step 4: return finalTestResults array to pass to react rendering side of application
- // console.log(finalTestResults);
-  return finalTestResults;
-}
+//   // Step 1: consolidate results by test
+//   rawResults.forEach(test => {
+//     if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
+//       finalTestResults[test.fileResults.testProp] = test;
+//     } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
+//       if (test.fileResults.status === 'fail') {
+//         finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
+//       }
+//     }
+//   });
+//   // Step 3: Push final result object to finalTestResults
+//   // Step 4: return finalTestResults array to pass to react rendering side of application
+//  // console.log(finalTestResults);
+//   return finalTestResults;
+// }

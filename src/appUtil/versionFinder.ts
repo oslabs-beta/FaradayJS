@@ -1,3 +1,5 @@
+
+
 const versionFinder = (obj:any) =>{
   let version = 0;
   // Rather than using loops to locate electron version, I think hard-coding might be faster here, since this is O(1)

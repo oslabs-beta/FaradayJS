@@ -25,8 +25,8 @@ const NavBar = () =>{
     bridgeAPI.openFolder();
 
     //@ts-expect-error
-    bridgeAPI.receiveData('preload:open-folder', (data)=>{
-      console.log(data)
+    bridgeAPI.receiveData('preload:open-folder', (data: string)=>{
+      console.log(data);
     })
   }
 
