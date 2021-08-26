@@ -1,7 +1,34 @@
-import React, { useState } from 'react';
-// import { ipcRenderer } from 'electron';
+import React, { useState, useEffect } from 'react';
+
+
 
 const NavBar = () =>{
+  
+  const handleClick = () => {
+  //@ts-expect-error
+    API.incrementCount();
+
+    //@ts-expect-error
+    API.receiveCount("preload:test", (data) => {
+      console.log(`Received ${data} from main process`);
+      
+  });
+  }
+
+  const handleClickOpenFile = () =>{
+    //@ts-expect-error
+    bridgeAPI.openFile();  
+  }
+
+  const handleClickOpenFolder = () =>{
+    //@ts-expect-error
+    bridgeAPI.openFolder();
+
+    //@ts-expect-error
+    bridgeAPI.receiveData('preload:open-folder', (data: string)=>{
+      console.log(data);
+    })
+  }
 
   return(
     <div className="inline-flex">
