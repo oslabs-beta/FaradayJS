@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 const NavBar = () =>{
   const history = useHistory();
-  console.log("history: ", history);
+  //console.log("history: ", history);
 
   const [testProp, setTestProp] = useState("");
   const [status, setStatus] = useState("");
