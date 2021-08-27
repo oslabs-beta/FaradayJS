@@ -15,7 +15,8 @@ export const parser = async (obj: string) => {
 };
 
 export const htmlparser = (obj: string) => {
-  //const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
+  const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
+  console.log(dom)
   let tempCache: { [key: string]: boolean } = {};
 
   const parsed = new htmlparser2.Parser({

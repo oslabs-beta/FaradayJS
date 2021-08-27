@@ -9,7 +9,6 @@ const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
 
-
 let win: BrowserWindow;
 
 const options = {
@@ -146,30 +145,6 @@ const OpenFolder = async () => {
       return returnValue;
     }
 
-
-    //////////
-  //   await readAllFolder(folder.filePaths[0])
-
-  //   let resultObj;
-
-  //   for(let i = 0; i<temparr.length;i++){
-  //       const ast = parser(temparr[i])
-  //       //ast.location = folderLoc[i]
-  //       resultObj = await traverser(ast)
-  //       checker(resultObj, 10) 
-  //   }
-  //   for(let i = 0; i<tempHTMLarr.length; i++){
-  //     const astHTML = htmlparser(tempHTMLarr[i])
-  //   }
-
-  //   const version = versionFinder(JSON.parse(tempPackageJsonarr));
-  //   console.log(version)
-
-  //   return 'Compiled List';
-    
-  // }catch(err){
-  //   console.log(err)
-  //////////
     return await readAllFolder(folder.filePaths[0]);
   } catch(err){
     console.log('Open Folder Error: ', err);
@@ -195,43 +170,11 @@ const processCodeBase = async (codebaseObj:any) => {
           });
         }
       }
-     //   //console.log(parser(result[i]))
-     //   if(!result[i].includes("react")){
-      //const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
-        // console.log("ast here");
-        //traversedAstNodes = traverser(ast);
-        // if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
-        //   rawTestResults.push({
-        //      fileResults: checker(traversedAstNodes, version),
-        //      filename: codebaseObj.fileObjectArray[i].fileName,
-        //    });
-        // }
-         //console.log("checked this one");
    }
-   console.log('Raw After ProcessCodeBase: ', rawTestResults);
+   //console.log('Raw After ProcessCodeBase: ', rawTestResults);
    return rawTestResults;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
   }
 
 } 
-
-
-// const interpretRawTestResults = (rawResults: any[]) => {
-//   const finalTestResults: any = {};
-
-//   // Step 1: consolidate results by test
-//   rawResults.forEach(test => {
-//     if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
-//       finalTestResults[test.fileResults.testProp] = test;
-//     } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
-//       if (test.fileResults.status === 'fail') {
-//         finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
-//       }
-//     }
-//   });
-//   // Step 3: Push final result object to finalTestResults
-//   // Step 4: return finalTestResults array to pass to react rendering side of application
-//  // console.log(finalTestResults);
-//   return finalTestResults;
-// }
