@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
-import {parser, htmlparser} from './appUtil/parser'
+import { parser, htmlparser } from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
@@ -146,30 +146,6 @@ const OpenFolder = async () => {
       return returnValue;
     }
 
-
-    //////////
-  //   await readAllFolder(folder.filePaths[0])
-
-  //   let resultObj;
-
-  //   for(let i = 0; i<temparr.length;i++){
-  //       const ast = parser(temparr[i])
-  //       //ast.location = folderLoc[i]
-  //       resultObj = await traverser(ast)
-  //       checker(resultObj, 10) 
-  //   }
-  //   for(let i = 0; i<tempHTMLarr.length; i++){
-  //     const astHTML = htmlparser(tempHTMLarr[i])
-  //   }
-
-  //   const version = versionFinder(JSON.parse(tempPackageJsonarr));
-  //   console.log(version)
-
-  //   return 'Compiled List';
-    
-  // }catch(err){
-  //   console.log(err)
-  //////////
     return await readAllFolder(folder.filePaths[0]);
   } catch(err){
     console.log('Open Folder Error: ', err);
@@ -178,35 +154,35 @@ const OpenFolder = async () => {
 
 const processCodeBase = async (codebaseObj:any) => {
   try {
-    const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
+    let version = 13;
+    if(codebaseObj.packageJsonContents){
+      version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents))
+    }
     let rawTestResults: any[] = [];
     let traversedAstNodes: any = {};
+
+    const addFileNamesToResultsArray: any = (resultsArray: any, file: number) => {
+      resultsArray.forEach((resultObj: any) => {
+        rawTestResults.push({
+          fileResults: resultObj,
+          fileName: codebaseObj.fileObjectArray[file].fileName,
+          filePath: codebaseObj.fileObjectArray[file].path
+        });
+      });
+    }
+    
     for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
       if(codebaseObj.fileObjectArray[i].fileName.includes('.html')){
-        htmlparser(codebaseObj.fileObjectArray[i].contents)
+        const htmlFileResultsArray: any = await htmlparser(codebaseObj.fileObjectArray[i].contents);
+        addFileNamesToResultsArray(htmlFileResultsArray, i);
       }else{
         const ast: any = await parser(codebaseObj.fileObjectArray[i].contents);
         traversedAstNodes = await traverser(ast);
         if(traversedAstNodes.hasOwnProperty('webPreferences')){
-          rawTestResults.push({
-            fileResults: checker(traversedAstNodes, version),
-            fileName: codebaseObj.fileObjectArray[i].fileName,
-            filePath: codebaseObj.fileObjectArray[i].path
-          });
+          const fileResultsArray: any = checker(traversedAstNodes, version);
+          addFileNamesToResultsArray(fileResultsArray, i);
         }
       }
-     //   //console.log(parser(result[i]))
-     //   if(!result[i].includes("react")){
-      //const ast: any = parser(codebaseObj.fileObjectArray[i].contents);
-        // console.log("ast here");
-        //traversedAstNodes = traverser(ast);
-        // if (traversedAstNodes.hasOwnProperty('webPreferences')) { // should have index and file something
-        //   rawTestResults.push({
-        //      fileResults: checker(traversedAstNodes, version),
-        //      filename: codebaseObj.fileObjectArray[i].fileName,
-        //    });
-        // }
-         //console.log("checked this one");
    }
    console.log('Raw After ProcessCodeBase: ', rawTestResults);
    return rawTestResults;
