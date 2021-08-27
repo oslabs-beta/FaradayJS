@@ -55,7 +55,7 @@ const createWindow = (): void => {
       const processedResult = await processCodeBase(rawResult);
       const jsondResult = JSON.stringify(processedResult);
       console.log('ProcessedResult: ', processedResult);
-      event.sender.send('preload:open-folder', processedResult);
+      event.sender.send('preload:open-folder', jsondResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
     }
