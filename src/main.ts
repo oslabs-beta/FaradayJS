@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
-import {parser, htmlparser} from './appUtil/parser'
+import { parser, htmlparser } from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
@@ -153,24 +153,33 @@ const OpenFolder = async () => {
 
 const processCodeBase = async (codebaseObj:any) => {
   try {
-    let version = 0;
+    let version = 13;
     if(codebaseObj.packageJsonContents){
       version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents))
     }
     let rawTestResults: any[] = [];
     let traversedAstNodes: any = {};
+
+    const addFileNamesToResultsArray: any = (resultsArray: any, file: number) => {
+      resultsArray.forEach((resultObj: any) => {
+        rawTestResults.push({
+          fileResults: resultObj,
+          fileName: codebaseObj.fileObjectArray[file].fileName,
+          filePath: codebaseObj.fileObjectArray[file].path
+        });
+      });
+    }
+    
     for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
       if(codebaseObj.fileObjectArray[i].fileName.includes('.html')){
-        htmlparser(codebaseObj.fileObjectArray[i].contents)
+        const htmlFileResultsArray: any = await htmlparser(codebaseObj.fileObjectArray[i].contents);
+        addFileNamesToResultsArray(htmlFileResultsArray, i);
       }else{
         const ast: any = await parser(codebaseObj.fileObjectArray[i].contents);
         traversedAstNodes = await traverser(ast);
         if(traversedAstNodes.hasOwnProperty('webPreferences')){
-          rawTestResults.push({
-            fileResults: checker(traversedAstNodes, version),
-            fileName: codebaseObj.fileObjectArray[i].fileName,
-            filePath: codebaseObj.fileObjectArray[i].path
-          });
+          const fileResultsArray: any = checker(traversedAstNodes, version);
+          addFileNamesToResultsArray(fileResultsArray, i);
         }
       }
    }
