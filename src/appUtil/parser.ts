@@ -19,7 +19,7 @@ export const htmlparser = (obj: string) => {
   let tempCache: { [key: string]: boolean } = {};
   const tests: any = {
     disablewebsecurity: {
-      failValue: true
+      failValue: true,
     },
     allowpopups: {
       failValue: true
@@ -34,7 +34,7 @@ export const htmlparser = (obj: string) => {
     ) {
       for (let test in tests) {
         const testResult = {
-          testProp: tests[test],
+          testProp: test,
           failValue: tests[test].failValue,
           status: 'unknown',
           start: 0,
@@ -42,17 +42,16 @@ export const htmlparser = (obj: string) => {
         };
         if (tests[test].hasOwnProperty('failValue')) {
           if (name === 'webview' &&
-            attribute.hasOwnProperty(tests[test])
+            attribute.hasOwnProperty(test)
           ) {
             testResult.status = 'fail'
+            testResults.push(testResult);
           } else if (name === 'webview' &&
-            !attribute.hasOwnProperty(tests[test])
+            !attribute.hasOwnProperty(test)
             ) {
-            testResult.status = 'pass by default';
-          } else {
-            testResult.status = 'pass by default';
+              testResult.status = 'pass by default';
+              testResults.push(testResult);
           }
-          testResults.push(testResult);
         }
       }
     },
@@ -64,5 +63,33 @@ export const htmlparser = (obj: string) => {
 
   parsed.end();
 
+  // loop through keys in tests obj
+  // checking if that key does NOT exist in testResults
+  //  then push to testResults a testResult obj defined here that has a status of 'pass by default'
+
+
+  for (let test in tests) {
+    // const isResultPresent = testResults.reduce((accum: boolean, currVal: any) => {
+    //   if (currVal.testProp === test) return accum = true;
+    // }, false); 
+    let isResultPresent: boolean = false;
+
+    testResults.forEach((obj:any) =>{
+      if(obj.testProp === test){
+        isResultPresent = true
+      }
+    })
+
+    if(!isResultPresent) {
+      testResults.push({
+        testProp: test,
+        failValue: tests[test].failValue,
+        status: 'pass by default',
+        start: 0,
+        end: 0
+      });
+    }
+  }
+  
   return testResults;
 };
