@@ -21,7 +21,7 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
   const testResults: any = [];
 
   for (let test in tests) {
-    console.log(tests[test].failValue);
+    //console.log(tests[test].failValue);
 
     if (tests[test].hasOwnProperty('failValue')) {
       const testProp: any = test;
@@ -47,11 +47,11 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
       } else { //if (versionDefaults[testProp] === !failValue) {
         testResult.status = 'pass by default';
       }
-      console.log('Single Test Result: ', testResult);
+      //console.log('Single Test Result: ', testResult);
       testResults.push(testResult);
     }
   }
-  console.log('Checker results: ', testResults);
+  //console.log('Checker results: ', testResults);
   return testResults;
 };
 
