@@ -26,12 +26,7 @@ export const htmlparser = (obj: string) => {
     }
   }
   const testResults: any = [];
-  //   testProp: testProp,
-  //   failValue: testFailValue,
-  //   status: 'unknown',
-  //   start: undefined,
-  //   end: undefined
-  // };
+
   const parsed = new htmlparser2.Parser({
     onopentag(
       name: string,
