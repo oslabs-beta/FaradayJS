@@ -52,8 +52,8 @@ const createWindow = (): void => {
     try{
       const rawResult: any = await OpenFolder();
       const processedResult = await processCodeBase(rawResult);
-      const jsondResult = JSON.stringify(processedResult);
-      console.log('ProcessedResult: ', processedResult);
+      //const jsondResult = JSON.stringify(processedResult);
+      //console.log('ProcessedResult: ', processedResult);
       event.sender.send('preload:open-folder', processedResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
@@ -153,7 +153,10 @@ const OpenFolder = async () => {
 
 const processCodeBase = async (codebaseObj:any) => {
   try {
-    const version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents));  
+    let version = 0;
+    if(codebaseObj.packageJsonContents){
+      version = await versionFinder(JSON.parse(codebaseObj.packageJsonContents))
+    }
     let rawTestResults: any[] = [];
     let traversedAstNodes: any = {};
     for (let i = 0; i < codebaseObj.fileObjectArray.length; i++) {
