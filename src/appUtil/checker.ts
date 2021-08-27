@@ -11,6 +11,9 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
     },
     nodeIntegrationInWorker: {
       failValue: true
+    },
+    allowRunningInsecureContent: {
+      failValue: true
     }
   }
 
@@ -27,8 +30,8 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         testProp: testProp,
         failValue: testFailValue,
         status: 'unknown',
-        start: undefined,
-        end: undefined
+        start: 0,
+        end: 0
       };
 
       if (propertiesObj.hasOwnProperty(testProp)) {
