@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import path from 'path';
 import openFolderIcon from '../../icons/openFolder.svg';
-import icon from '../../icons/icon.svg';
+import icon from '../../icons/iconTransparent.svg';
 
 const NavBar = () =>{
   const history = useHistory();
@@ -97,13 +97,19 @@ const NavBar = () =>{
       
       {/* "sm:container sm :mx-auto px-4 overflow-contain border-double border-4 border-peach-light" */}
       {/* "/Users/Rosio/Desktop/code/codesmithCode/projects/production-project/electron-security-app/catsnake-electron-security/src/icons/open-folder-with-document.svg" */}
-      <div className="grid grid-cols-7 md:grid-cols-7 gap-4 overflow-contain" id="results">
-        <div><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}>
-          <img className="fill-current w-4 h-4 mr-2" src="openFolder"/>
-          <span>Run Tests</span></button></div>
-        <img src={icon}/>
+      {/* grid grid-cols-7 md:grid-cols-7 gap-4 */}
+      <div className="grid grid-cols-2" id="results">
+        <div className="justify-self-start"><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}>
+          <img className="fill-current w-4 h-4 mr-2" src={openFolderIcon}/>
+          <span>Run Tests</span></button>
+        </div>
+        <div className="justify-self-end">
+          <img className="object-right-top h-16" src={icon}/>
+        </div>
+       
+        
       </div>
-      <div className='col-span-6 p-15'>{conditional}</div>
+      <div className='col-span-6'>{conditional}</div>
     </div>
     
   )
