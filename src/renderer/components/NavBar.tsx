@@ -5,7 +5,9 @@ import { withRouter } from 'react-router-dom';
 const NavBar = () =>{
   const history = useHistory();
   //console.log("history: ", history);
+  // const sacrificeToTheTSGods:any=[]
 
+  const [newData, setNewData] = useState<any[]>([]);
   const [testProp, setTestProp] = useState("");
   const [status, setStatus] = useState("");
   const [failValue, setFailValue] = useState("");
@@ -30,23 +32,26 @@ const NavBar = () =>{
     bridgeAPI.openFile();  
   }
   // let ourData : { fileName: string, filePath: string, fileResults: { end: undefined, failValue: string, start: undefined, status: string, testProp: string } }[];
+  // let newData:any = null
   const handleClickOpenFolder = () =>{
+    
     //@ts-expect-error
     bridgeAPI.openFolder();
 
     // / data: { fileName: string, filePath: string, fileResults: { end: bool, failValue: string, start: bool, status: string, testProp: string } }[]
     //@ts-expect-error
-    bridgeAPI.receiveData('preload:open-folder', (data: string)=>{
+    bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
       console.log('data: ', data);
-      const unstringifiedData= JSON.parse(data)
+      setNewData(data)
+      // const unstringifiedData:any= data
       
-      setTestProp(unstringifiedData[0].fileResults.testProp)
-      setStatus(unstringifiedData[0].fileResults.status)
-      setFailValue(unstringifiedData[0].fileResults.failValue)
-      setFileName(unstringifiedData[0].fileName)
-      setStart(unstringifiedData[0].fileResults.start)
-      setEnd(unstringifiedData[0].fileResults.end)
-      setFilePath(unstringifiedData[0].filePath)
+      // setTestProp(unstringifiedData[0].fileResults.testProp)
+      // setStatus(unstringifiedData[0].fileResults.status)
+      // setFailValue(unstringifiedData[0].fileResults.failValue)
+      // setFileName(unstringifiedData[0].fileName)
+      // setStart(unstringifiedData[0].fileResults.start)
+      // setEnd(unstringifiedData[0].fileResults.end)
+      // setFilePath(unstringifiedData[0].filePath)
       // ourData = data
     });
 
@@ -61,7 +66,28 @@ const NavBar = () =>{
   useEffect(() => {
     // setTestResult(ourData)
     // window.addEventListener('click', handleClickForTestResults);
-  }, [ handleClickForTestResults]);
+  }, [ newData]);
+  //newData[i].fileResults.status==='fail' || newData[i].fileResults.status ==='fail by default'
+
+
+  const conditional = [];
+  for(let i = 0; i<newData.length; i++){
+    conditional.push(
+      <div>
+        {/* <h1><strong>Test {i}</strong></h1> */}
+        <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
+        <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
+        {newData[i].fileResults.status.includes('fail') && <div><strong>Issue: </strong>{`${newData[i].fileResults.testProp} is set to ${newData[i].fileResults.failValue}`}</div>}
+        <div><strong>File Name: </strong>{newData[i].fileName}</div>
+        {newData[i].fileResults.start>0 && <div><strong>Start: </strong>{newData[i].fileResults.start}</div>}
+        {newData[i].fileResults.end>0 && <div><strong>End: </strong>{newData[i].fileResults.end}</div>}
+        <div><strong>File Path: </strong>{newData[i].filePath}</div>
+        <br></br>
+    </div>)
+  }
+
+
+
 
   return(
     <div>
@@ -69,16 +95,10 @@ const NavBar = () =>{
 
       <div className="inline-flex">
         {/* "sm:container sm :mx-auto px-4 overflow-contain border-double border-4 border-peach-light" */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 overflow-contain border-double border-4 border-peach-light" id="results">
+        <div className="grid grid-cols-7 md:grid-cols-7 gap-4 overflow-contain border-double border-4 border-peach-light" id="results">
          <div><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}><img className="fill-current w-4 h-4 mr-2" src="/Users/Rosio/Desktop/code/codesmithCode/projects/production-project/electron-security-app/catsnake-electron-security/src/icons/open-folder-with-document.svg"/><span>Run Tests</span></button></div>
-         <div col-span-2>
-           <div><strong>Test: </strong>{testProp}</div>
-            <div><strong>Status: </strong>{status}</div>
-            {failValue && <div><strong>Issue: </strong>{failValue}</div>}
-            <div><strong>File Name: </strong>{fileName}</div>
-            {start>0 && <div><strong>Start: </strong>{start}</div>}
-            {end>0 && <div><strong>End: </strong>{end}</div>}
-            <div><strong>File Path: </strong>{filePath}</div>
+         <div className='col-span-6 pt-15'>
+           {conditional}
         </div>
         </div>
       </div>
