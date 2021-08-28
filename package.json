@@ -38,6 +38,7 @@
     "postcss-loader": "^6.1.1",
     "react-ast": "^0.3.1",
     "style-loader": "^3.2.1",
+    "svg-url-loader": "^7.1.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
