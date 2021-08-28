@@ -38,7 +38,7 @@ const NavBar = () =>{
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: string)=>{
       console.log('data: ', data);
-      const unstringifiedData= JSON.parse(data)
+      const unstringifiedData: any = data
       
       setTestProp(unstringifiedData[0].fileResults.testProp)
       setStatus(unstringifiedData[0].fileResults.status)
@@ -71,7 +71,7 @@ const NavBar = () =>{
         {/* "sm:container sm :mx-auto px-4 overflow-contain border-double border-4 border-peach-light" */}
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 overflow-contain border-double border-4 border-peach-light" id="results">
          <div><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}><img className="fill-current w-4 h-4 mr-2" src="/Users/Rosio/Desktop/code/codesmithCode/projects/production-project/electron-security-app/catsnake-electron-security/src/icons/open-folder-with-document.svg"/><span>Run Tests</span></button></div>
-         <div col-span-2>
+         <div className="col-span-2">
            <div><strong>Test: </strong>{testProp}</div>
             <div><strong>Status: </strong>{status}</div>
             {failValue && <div><strong>Issue: </strong>{failValue}</div>}
