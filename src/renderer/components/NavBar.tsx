@@ -72,20 +72,21 @@ const NavBar = () =>{
   }, [ newData]);
   //newData[i].fileResults.status==='fail' || newData[i].fileResults.status ==='fail by default'
 
-
   const conditional = [];
   for(let i = 0; i<newData.length; i++){
     conditional.push(
-      <div>
-        {/* <h1><strong>Test {i}</strong></h1> */}
-        <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
-        <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
-        {newData[i].fileResults.status.includes('fail') && <div><strong>Issue: </strong>{`${newData[i].fileResults.testProp} is set to ${newData[i].fileResults.failValue}`}</div>}
-        <div><strong>File Name: </strong>{newData[i].fileName}</div>
-        {newData[i].fileResults.start>0 && <div><strong>Start: </strong>{newData[i].fileResults.start}</div>}
-        {newData[i].fileResults.end>0 && <div><strong>End: </strong>{newData[i].fileResults.end}</div>}
-        <div><strong>File Path: </strong>{newData[i].filePath}</div>
-        <br></br>
+      <div className="w-full p-3">
+        {/* lg:h-32 border border-gray-other*/}
+        <div className="flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
+          <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
+          <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
+          {newData[i].fileResults.status.includes('fail') && <div><strong>Issue: </strong>{`${newData[i].fileResults.testProp} is set to ${newData[i].fileResults.failValue}`}</div>}
+          <div><strong>File Name: </strong>{newData[i].fileName}</div>
+          {newData[i].fileResults.start>0 && <div><strong>Start: </strong>{newData[i].fileResults.start}</div>}
+          {newData[i].fileResults.end>0 && <div><strong>End: </strong>{newData[i].fileResults.end}</div>}
+          <div><strong>File Path: </strong>{newData[i].filePath}</div>
+          <br></br>
+        </div>
     </div>)
   }
 
