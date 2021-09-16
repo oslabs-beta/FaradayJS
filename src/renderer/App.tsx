@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 const App = () => {
   
   return (
-    <div className="h-screen bg-gradient-to-b from-gray-light to-white">
+    <div className="h-screen bg-gradient-to-b from-gray-light to-white p-4">
       <NavBar/>
       {/* <div className="bg-white mx-auto max-w-sm shadow-lg rounded-lg overflow-hidden">
       <div className="sm:flex sm:items-center px-6 py-4">
