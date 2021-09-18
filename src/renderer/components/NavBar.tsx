@@ -5,14 +5,22 @@ import path from 'path';
 import openFolderIcon from '../../icons/openFolder.svg';
 import icon from '../../icons/iconTransparent.svg';
 
+import { RootState } from '../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { newTestResults, expandResult } from '../testResultSlice';
+
 const NavBar = () =>{
   // const history = useHistory();
   //console.log("history: ", history);
   // const sacrificeToTheTSGods:any=[]
 
-  const [newData, setNewData] = useState<any[]>([]);
+  //const [newData, setNewData] = useState<any[]>([]);
 
-  const [expandBools, setExpandBools] = useState<boolean[]>([]);
+  //const [expandBools, setExpandBools] = useState<boolean[]>([]);
+
+  const newData = useSelector((state: RootState) => state.testResults.testResults);
+  const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
+  const dispatch = useDispatch();
 
   // const handleClick = () => {
   // //@ts-expect-error
@@ -36,12 +44,12 @@ const NavBar = () =>{
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
       console.log('data: ', data);
-      setNewData(data)
-      const newBools: Array<boolean> = []
-      for (let i = 0; i < newData.length; i += 1) {
-        newBools[i] = false;
-      }
-      setExpandBools(newBools);
+      dispatch(newTestResults(data));
+      // const newBools: Array<boolean> = []
+      // for (let i = 0; i < newData.length; i += 1) {
+      //   newBools[i] = false;
+      // }
+      // setExpandBools(newBools);
     });
 
   }
@@ -54,20 +62,20 @@ const NavBar = () =>{
   }, [newData]);
   //newData[i].fileResults.status==='fail' || newData[i].fileResults.status ==='fail by default'
 
-  const handleExpandClick = (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
-    console.log(index);
-    let updatedBools = expandBools;
-    updatedBools[index] = !updatedBools[index];
-    setExpandBools(updatedBools);
-    console.log(expandBools);
-  }
+  // const handleExpandClick = (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+  //   console.log(index);
+  //   let updatedBools = expandBools;
+  //   updatedBools[index] = !updatedBools[index];
+  //   setExpandBools(updatedBools);
+  //   console.log(expandBools);
+  // }
 
   const conditional = [];
   for(let i = 0; i<newData.length; i++){
     conditional.push(
       <div className="w-full p-3" key={i}>
         {/* lg:h-32 border border-gray-other*/}
-        <button onClick={(e) => handleExpandClick(e, i)} className="flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
+        <button onClick={() => dispatch(expandResult(i))} className="flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
           <div>{i}</div>
           <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
           <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
@@ -81,7 +89,7 @@ const NavBar = () =>{
         {expandBools[i] && <div>
             <div><strong>Details: </strong>This matters because...</div>
           </div>}
-    </div>)
+    </div>);
   }
 
   return(
