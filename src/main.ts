@@ -15,7 +15,7 @@ const options = {
   width: 800,
   height: 600,
   webPreferences: {
-    nodeIntegration: true,
+    nodeIntegration: false,
     preload: path.join(__dirname, "preload.js")
   }
 }
@@ -102,7 +102,6 @@ const OpenFolder = async () => {
     });
 
     if (!folders) return;
-
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
     const returnValue: any = {};
@@ -114,31 +113,31 @@ const OpenFolder = async () => {
       const readDirMain = fs.readdirSync(dirMain);
 
       readDirMain.forEach(async (dirNext: string) => {
-        if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
-          readAllFolder(dirMain + "/" + dirNext);
+        if (fs.lstatSync(dirMain + "\\" + dirNext).isDirectory()) {
+          readAllFolder(dirMain + "\\" + dirNext);
         } else {
           if (
-            ((dirMain + "/" + dirNext).includes('.js') ||
-            (dirMain + "/" + dirNext).includes('.jsx') ||
-            (dirMain + "/" + dirNext).includes('.ts') ||
-            (dirMain + "/" + dirNext).includes('.tsx') ||
-            (dirMain + "/" + dirNext).includes('.html')) &&
-            !(dirMain + "/" + dirNext).includes(".vscode") &&
-            !(dirMain + "/" + dirNext).includes(".json") && 
-            !(dirMain + "/" + dirNext).includes("node_modules") &&
-            !(dirMain + "/" + dirNext).includes(".txt") &&
-            !(dirMain + "/" + dirNext).includes("dist") &&
-            !(dirMain + "/" + dirNext).includes("build")
+            ((dirMain + "\\" + dirNext).includes('.js') ||
+            (dirMain + "\\" + dirNext).includes('.jsx') ||
+            (dirMain + "\\" + dirNext).includes('.ts') ||
+            (dirMain + "\\" + dirNext).includes('.tsx') ||
+            (dirMain + "\\" + dirNext).includes('.html')) &&
+            !(dirMain + "\\" + dirNext).includes(".vscode") &&
+            !(dirMain + "\\" + dirNext).includes(".json") && 
+            !(dirMain + "\\" + dirNext).includes("node_modules") &&
+            !(dirMain + "\\" + dirNext).includes(".txt") &&
+            !(dirMain + "\\" + dirNext).includes("dist") &&
+            !(dirMain + "\\" + dirNext).includes("build")
             ){
-            const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            const fileContent = fs.readFileSync(dirMain + "\\" + dirNext).toString();
             const fileObj: any = {
-              path: dirMain + "/",
+              path: dirMain + "\\",
               fileName: dirNext,
               contents: fileContent
             }
             returnValue.fileObjectArray.push(fileObj);
-          } else if ((dirMain + "/" + dirNext).includes('package.json')){
-            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "/" + dirNext).toString();
+          } else if ((dirMain + "\\" + dirNext).includes('package.json')){
+            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "\\" + dirNext).toString();
           }
         }
       });
