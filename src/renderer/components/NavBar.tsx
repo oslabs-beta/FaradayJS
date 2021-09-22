@@ -9,7 +9,7 @@ import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { newTestResults, expandResult } from '../testResultSlice';
 
-const NavBar = () =>{
+const NavBar: () => JSX.Element = () => {
   // const history = useHistory();
   //console.log("history: ", history);
   // const sacrificeToTheTSGods:any=[]
@@ -17,6 +17,8 @@ const NavBar = () =>{
   //const [newData, setNewData] = useState<any[]>([]);
 
   //const [expandBools, setExpandBools] = useState<boolean[]>([]);
+
+  const name = useSelector((state: RootState) => state.testResults.projectName);
 
   const newData = useSelector((state: RootState) => state.testResults.testResults);
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
@@ -35,7 +37,7 @@ const NavBar = () =>{
 
   // let ourData : { fileName: string, filePath: string, fileResults: { end: undefined, failValue: string, start: undefined, status: string, testProp: string } }[];
   // let newData:any = null
-  const handleClickOpenFolder = () =>{
+  const handleClickOpenFolder = () => {
     
     //@ts-expect-error
     bridgeAPI.openFolder();
@@ -57,9 +59,10 @@ const NavBar = () =>{
   // }, []);
 
   useEffect(() => {
+    console.log(name);
     // setTestResult(ourData)
     // window.addEventListener('click', handleClickForTestResults);
-  }, [newData]);
+  }, [name]);
   //newData[i].fileResults.status==='fail' || newData[i].fileResults.status ==='fail by default'
 
   // const handleExpandClick = (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -70,7 +73,14 @@ const NavBar = () =>{
   //   console.log(expandBools);
   // }
 
-  const conditional = [];
+const handleShowState = () => {
+  console.log("State is:");
+  console.log(name);
+  console.log(newData);
+  console.log(newData[0]);
+}
+
+  const conditional: Array<JSX.Element> = [];
   for(let i = 0; i<newData.length; i++){
     conditional.push(
       <div className="w-full p-3" key={i}>
@@ -107,9 +117,9 @@ const NavBar = () =>{
         </div>
       </div>
       <div className='col-span-6'>{conditional}</div>
+      <button onClick={handleShowState}>See State</button>
     </div>
-    
-  )
+  );
 }
 
 export default withRouter(NavBar);
