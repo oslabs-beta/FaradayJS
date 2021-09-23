@@ -4,6 +4,7 @@ import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
 import menuTemplate from './appUtil/menuTemplate';
+import tsmorph from './appUtil/tsmorph';
 
 const fs = require('fs')
 const path = require('path')
@@ -32,46 +33,34 @@ const createWindow = (): void => {
   ipcMain.on('main:open-file', async (event, payload)=>{
     try{
       const result = await OpenFile();
-      //console.log(result)
-
       event.reply('preload:open-file', result)
-
     }catch(err){
       console.log(err)
     }
   })
 
-  ipcMain.on('main:test', (event, payload)=>{
-    event.sender.send('preload:test', 'sdsdsdsdsdsd')
-
+  ipcMain.on('main:change-value', async(event, payload)=>{
+    tsmorph(payload[0], payload[1], payload[2])
   })
-
-
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
       const rawResult: any = await OpenFolder();
-      const processedResult = await processCodeBase(rawResult);
-      //const jsondResult = JSON.stringify(processedResult);
-      //console.log('ProcessedResult: ', processedResult);
+      let processedResult;
+      if(rawResult) processedResult = await processCodeBase(rawResult);
       event.sender.send('preload:open-folder', processedResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
     }
-
   })
-
 
   const isMac = process.platform === 'darwin'  
   const template: any = menuTemplate(win);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
-
 }
 
-
 app.on('ready', createWindow);
-
 
 // Open File Function
 const OpenFile = async () => {
@@ -92,18 +81,19 @@ const OpenFile = async () => {
     const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
     return fileContent;
   };
+
 }
 
 const OpenFolder = async () => {
   try {
-
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     });
 
-    if (!folders) return;
+
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
+    
     const returnValue: any = {};
     returnValue.fileObjectArray = [];
     returnValue.packageJsonContents = '';
@@ -144,7 +134,11 @@ const OpenFolder = async () => {
       return returnValue;
     }
 
-    return await readAllFolder(folder.filePaths[0]);
+    if(folder.canceled){
+      return
+    }else{
+      return await readAllFolder(folder.filePaths[0]);
+    }
   } catch(err){
     console.log('Open Folder Error: ', err);
   }

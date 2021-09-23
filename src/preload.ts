@@ -14,34 +14,9 @@ contextBridge.exposeInMainWorld(
             if(validChannels.includes(channel)){
                 ipcRenderer.once(channel, (event, ...args)=>func(...args))
             }
+        },
+        changeValue: (args:any) =>{
+            ipcRenderer.send('main:change-value', args)
         }
     }
 )
-
-contextBridge.exposeInMainWorld(
-    'API',
-    {
-        incrementCount:()=>{
-            ipcRenderer.send('main:test',{})
-            
-        },
-        receiveCount: (channel:any, func:any) =>{
-            let validChannels = ["preload:test"];
-            if (validChannels.includes(channel)) {
-                ipcRenderer.once(channel, (event, ...args) => func(...args))
-            }
-        },
-    }
-)
-
-// ipcRenderer.on('preload:open-file', (event, arg) => {
-//     console.log('preload:open-file')
-//     //@ts-expect-error
-//     document.getElementById('hello').innerHTML = arg
-// })
-
-// ipcRenderer.on('preload:open-folder', (event, arg)=>{
-//     console.log('arg is ', arg);
-//     //@ts-expect-error
-//     document.getElementById('results').innerHTML = arg;
-// })
