@@ -89,8 +89,6 @@ const OpenFolder = async () => {
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     });
-
-
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
     
