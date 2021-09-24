@@ -4,8 +4,10 @@ import '../../src/styles.css';
 import App from './App';
 import TestDisplay from './TestDisplay';
 import { HashRouter as Router, Route, Switch , Link, Redirect } from 'react-router-dom';
+import {Provider} from 'react-redux'
 
 ReactDOM.render(
+  <Provider>
   <Router>
     <div>
       {/* <div>
@@ -20,6 +22,7 @@ ReactDOM.render(
         </Switch>
       </main>
     </div>
-  </Router>,
+  </Router>
+  </Provider>,
   document.getElementById('root')
 );
