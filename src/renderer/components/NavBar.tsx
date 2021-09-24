@@ -31,13 +31,11 @@ const NavBar = () =>{
     });
   }
 
-
   const handleClickChangeValue = (arg:string)=>{
     console.log(arg)
     //@ts-expect-error
     bridgeAPI.changeValue(['D:\\Downloads\\calculator-master\\calculator-master\\main.js', 'spellcheck', false]);
   }
-
 
   const conditional = [];
   for(let i = 0; i<newData.length; i++){
