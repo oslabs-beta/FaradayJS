@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import path from 'path';
 import openFolderIcon from '../../icons/openFolder.svg';
 import icon from '../../icons/iconTransparent.svg';
+import ResultDisplay from './ResultDisplay'
 
 const NavBar = () =>{
   const history = useHistory();
@@ -26,57 +26,23 @@ const NavBar = () =>{
     // / data: { fileName: string, filePath: string, fileResults: { end: bool, failValue: string, start: bool, status: string, testProp: string } }[]
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
-      console.log('data: ', data);
+      //console.log('data: ', data);
       setNewData(data)
     });
   }
 
-  const handleClickChangeValue = (arg:string)=>{
-    console.log(arg)
-    //@ts-expect-error
-    bridgeAPI.changeValue(['D:\\Downloads\\calculator-master\\calculator-master\\main.js', 'spellcheck', false]);
-  }
-
-  const conditional = [];
-  for(let i = 0; i<newData.length; i++){
-    let components = <div className="w-full p-3">
-        {/* lg:h-32 border border-gray-other*/}
-        <div className="flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
-        <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
-        <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
-        {newData[i].fileResults.status.includes('fail') && <div><strong>Issue: </strong>{`${newData[i].fileResults.testProp} is set to ${newData[i].fileResults.failValue}`}</div>}
-        <div><strong>File Name: </strong>{newData[i].fileName}</div> 
-        {newData[i].fileResults.start>0 && <div><strong>Start: </strong>{newData[i].fileResults.start}</div>}
-        {newData[i].fileResults.end>0 && <div><strong>End: </strong>{newData[i].fileResults.end}</div>}
-        <div><strong>File Path: </strong>{newData[i].filePath}</div>
-        <br></br>
-      </div>
-    </div>
-    conditional.push(components)
-  }
-
   return(
     <div>
-      {/* "sm:container sm :mx-auto px-4 overflow-contain border-double border-4 border-peach-light" */}
-      {/* "/Users/Rosio/Desktop/code/codesmithCode/projects/production-project/electron-security-app/catsnake-electron-security/src/icons/open-folder-with-document.svg" */}
-      {/* grid grid-cols-7 md:grid-cols-7 gap-4 */}
       <div className="grid grid-cols-2" id="results">
         <div className="justify-self-start"><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}>
           <img className="fill-current w-4 h-4 mr-2" src={openFolderIcon}/>
           <span>Run Tests</span></button>
         </div>
-
-        <div className="justify-self-start"><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={()=>handleClickChangeValue("Hello")}>
-          <img className="fill-current w-4 h-4 mr-2" src={openFolderIcon}/>
-          <span>change</span></button>
-        </div>
-
         <div className="justify-self-end">
           <img className="object-right-top h-16" src={icon}/>
         </div>
-        
       </div>
-      <div className='col-span-6'>{conditional}</div>
+      <ResultDisplay newData = {newData}/>
     </div>
     
   )
