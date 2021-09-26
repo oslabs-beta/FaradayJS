@@ -40,7 +40,7 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('main:change-value', async(event, payload)=>{
-    tsmorph(payload[0], payload[1], payload[2])
+    tsmorph(payload[0]+payload[1], payload[2], payload[3])
   })
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
@@ -56,7 +56,7 @@ const createWindow = (): void => {
 
   ipcMain.on('main:refresh-code', async (event, payload)=>{
     try{
-      let refreshedObj = await refreshCode(payload[0], payload[1]);
+      let refreshedObj = await refreshCode(payload[0]+payload[1], payload[2]);
       event.sender.send('preload:refreshed-obj', refreshedObj)
     }catch(e){
       console.log('Refresh Error ', e)

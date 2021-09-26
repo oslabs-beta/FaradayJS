@@ -15,15 +15,13 @@ interface fileResult{
 
 const ResultDisplay = (props: any): JSX.Element => {
   const conditional:any = [];
-  const [arrItems, setArrItems] = useState([]);
+  const [arrItems, setArrItems] = useState<{fileName:string, filePath:string, fileResults:fileResult}[]>([]);
 
   useEffect(() => {
     setArrItems(props.newData);
-  },[props.newData]);
+  },[arrItems]);
 
-  //const [resultArr, setresultArr] = useState<{fileName:string, filePath:string, fileResult:fileResult}[]>([]);
-
-  const handleClickChangeValue = async (args:[string, string, boolean, number])=>{
+  const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
     //@ts-expect-error
     bridgeAPI.changeValue(args);
 
@@ -33,14 +31,14 @@ const ResultDisplay = (props: any): JSX.Element => {
     //@ts-expect-error
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
       //console.log('data: ', data);
-      let items:{fileName:string, filePath:string, fileResult:fileResult}[] = [...arrItems]
-      let item:{fileName:string, filePath:string, fileResult:fileResult} = data;
-      if(item) items[args[3]] = item;
-      console.log(items)
+      let items:{fileName:string, filePath:string, fileResults:fileResult}[] = [...arrItems]
+      let item:{fileName:string, filePath:string, fileResults:fileResult} = {fileName: args[1], filePath:args[0], fileResults: data};
+      if(item) items[args[4]] = item;
+      if(items) setArrItems([...items])
     });
   }
 
-  
+
   for (let i = 0; i < props.newData.length; i++) {
     const fileName:string = props.newData[i].fileName;
     const filePath:string = props.newData[i].filePath;
@@ -59,7 +57,7 @@ const ResultDisplay = (props: any): JSX.Element => {
         <div>
           <strong>Issue: </strong>{`${testProp} is set to ${failValue}`}
           <button className="bg-blue-500 float-right hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick = {()=>handleClickChangeValue([filePath+fileName, testProp, !failValue, i])}> 
+            onClick = {()=>handleClickChangeValue([filePath, fileName, testProp, !failValue, i])}> 
             Change the setting
           </button>
         </div>}
