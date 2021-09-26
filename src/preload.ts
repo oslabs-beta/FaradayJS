@@ -10,13 +10,16 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.send('main:open-folder')
         },
         receiveData: (channel:any, func:any) =>{
-            let validChannels = ['preload:open-folder'];
+            let validChannels = ['preload:open-folder', 'preload:refreshed-obj'];
             if(validChannels.includes(channel)){
                 ipcRenderer.once(channel, (event, ...args)=>func(...args))
             }
         },
         changeValue: (args:any) =>{
             ipcRenderer.send('main:change-value', args)
-        }
+        },
+        refreshCode: (args:any) =>{
+            ipcRenderer.send('main:refresh-code', args)
+        },
     }
 )

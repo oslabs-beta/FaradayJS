@@ -54,6 +54,15 @@ const createWindow = (): void => {
     }
   })
 
+  ipcMain.on('main:refresh-code', async (event, payload)=>{
+    try{
+      let refreshedObj = await refreshCode(payload[0], payload[1]);
+      event.sender.send('preload:refreshed-obj', refreshedObj)
+    }catch(e){
+      console.log('Refresh Error ', e)
+    }
+  })
+
   const isMac = process.platform === 'darwin'  
   const template: any = menuTemplate(win);
   const menu = Menu.buildFromTemplate(template);
@@ -91,7 +100,7 @@ const OpenFolder = async () => {
     });
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-    
+
     const returnValue: any = {};
     returnValue.fileObjectArray = [];
     returnValue.packageJsonContents = '';
@@ -137,6 +146,7 @@ const OpenFolder = async () => {
     }else{
       return await readAllFolder(folder.filePaths[0]);
     }
+
   } catch(err){
     console.log('Open Folder Error: ', err);
   }
@@ -179,5 +189,18 @@ const processCodeBase = async (codebaseObj:any) => {
   }catch(err){
     console.log('ProcessCodeBase: ', err)
   }
-
 } 
+
+const refreshCode = async (path:string, passedTestProp:string) => {
+  let version = 13;
+  const fileContent = await fs.readFileSync(path).toString();
+  const ast:any = await parser(fileContent);
+  let traversedAstNodes  = await traverser(ast);
+  const fileResultsArray: any = await checker([traversedAstNodes], version);
+  for(let i = 0; i<fileResultsArray.length; i++){
+    if(fileResultsArray[i].testProp === passedTestProp){
+      var refreshedResult = fileResultsArray[i];
+    }
+  }
+  return refreshedResult;
+}

@@ -1,7 +1,9 @@
 import { StringToken } from '@typescript-eslint/types/dist/ast-spec';
+import { JSXElement } from 'jscodeshift';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
+import { JsxClosingElement } from 'ts-morph';
 
 interface fileResult{
   start: number
@@ -12,14 +14,33 @@ interface fileResult{
 }
 
 const ResultDisplay = (props: any): JSX.Element => {
-  
-  const handleClickChangeValue = (arg:[string, string, boolean])=>{
+  const conditional:any = [];
+  const [arrItems, setArrItems] = useState([]);
+
+  useEffect(() => {
+    setArrItems(props.newData);
+  },[props.newData]);
+
+  //const [resultArr, setresultArr] = useState<{fileName:string, filePath:string, fileResult:fileResult}[]>([]);
+
+  const handleClickChangeValue = async (args:[string, string, boolean, number])=>{
     //@ts-expect-error
-    bridgeAPI.changeValue(arg);
+    bridgeAPI.changeValue(args);
+
+    //@ts-expect-error
+    bridgeAPI.refreshCode(args);
+
+    //@ts-expect-error
+    bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
+      //console.log('data: ', data);
+      let items:{fileName:string, filePath:string, fileResult:fileResult}[] = [...arrItems]
+      let item:{fileName:string, filePath:string, fileResult:fileResult} = data;
+      if(item) items[args[3]] = item;
+      console.log(items)
+    });
   }
 
-  const conditional = [];
-
+  
   for (let i = 0; i < props.newData.length; i++) {
     const fileName:string = props.newData[i].fileName;
     const filePath:string = props.newData[i].filePath;
@@ -34,11 +55,14 @@ const ResultDisplay = (props: any): JSX.Element => {
         <div className={status.includes('pass') ? "text-green-700" : "text-red-700"}>
           <strong>Status: </strong>{status}
         </div>
-        {status.includes('fail') && <div><strong>Issue: </strong>{`${testProp} is set to ${failValue}`}</div>}
         {status.includes('fail') && 
-          <button onClick = {()=>handleClickChangeValue([filePath+fileName, 'dd', !failValue])}> 
+        <div>
+          <strong>Issue: </strong>{`${testProp} is set to ${failValue}`}
+          <button className="bg-blue-500 float-right hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick = {()=>handleClickChangeValue([filePath+fileName, testProp, !failValue, i])}> 
             Change the setting
-          </button>}
+          </button>
+        </div>}
         <div>
           <strong>File Name: </strong>{fileName}
         </div>
