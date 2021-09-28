@@ -102,9 +102,9 @@ const handleShowState = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
           </svg>
         </button>
-        {expandBools[i] && <div>
-            <div><strong>Details: </strong>This matters because...</div>
-          </div>}
+        {expandBools[i] && <button className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
+          <strong>Details: </strong>This matters because... 
+          </button>}
     </div>);
   }
 
