@@ -1,13 +1,16 @@
-import { TEST_REQUEST,TEST_SUCCESS, TEST_FAILURE } from "./constants"
+interface TestState{
+  testsResults: boolean[]
+}
+const initialState={
+  testResults: []
+}
 
-export default testResultsReducer = (state=[], action) => {
+type Action = {type:"ADD_TESTS", payload: Array<boolean>}
+
+export const testResultsReducer = (state:TestState=initialState, action: Action) => {
   switch(action.type){
-    case TEST_REQUEST:
-      return {loading:true, results:[]}
-    case TEST_SUCCESS:
-      return {loading:false, results: action.payload.results}
-    case TEST_FAILURE:
-      return {loading: false, error: action.payload}
+    case "ADD_TESTS":
+      return {...state, testResults: [...state.testsResults, action.payload]}
     default:
       return state;
   }
