@@ -1,9 +1,5 @@
-import { StringToken } from '@typescript-eslint/types/dist/ast-spec';
-import { JSXElement } from 'jscodeshift';
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import { JsxClosingElement } from 'ts-morph';
 
 interface fileResult{
   start: number
@@ -14,13 +10,28 @@ interface fileResult{
 }
 
 const ResultDisplay = (props: any): JSX.Element => {
+  let tempBoolArr:boolean[] = [];
+  for(let i = 0; i<props.newData.length; i++){
+    let boolcheck = props.newData[i].fileResults.status.includes('pass')? true : false;
+    tempBoolArr.push(boolcheck)
+  }
+  
   const conditional:any = [];
   const [arrItems, setArrItems] = useState<{fileName:string, filePath:string, fileResults:fileResult}[]>([]);
+  const [boolArr, setBoolArr] = useState<boolean[]>(tempBoolArr);
+  const [simpleBool, setSimpleBool] = useState(false);
 
   useEffect(() => {
-    setArrItems(props.newData);
-  },[arrItems]);
+    setBoolArr(tempBoolArr)
+  },[tempBoolArr.length]);
 
+  useEffect(() => {
+    console.log('bool changed');
+  },[simpleBool]);
+
+  //console.log('temp', tempBoolArr);
+  //console.log('boolarr', boolArr)
+  
   const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
     //@ts-expect-error
     bridgeAPI.changeValue(args);
@@ -35,8 +46,10 @@ const ResultDisplay = (props: any): JSX.Element => {
       let item:{fileName:string, filePath:string, fileResults:fileResult} = {fileName: args[1], filePath:args[0], fileResults: data};
       if(item) items[args[4]] = item;
       if(items) setArrItems([...items])
+      setSimpleBool(!simpleBool);
     });
   }
+
 
 
   for (let i = 0; i < props.newData.length; i++) {
