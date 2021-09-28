@@ -9,6 +9,7 @@ import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { newTestResults, expandResult } from '../testResultSlice';
 
+
 const NavBar: () => JSX.Element = () => {
   // const history = useHistory();
   //console.log("history: ", history);
@@ -47,6 +48,7 @@ const NavBar: () => JSX.Element = () => {
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
       console.log('data: ', data);
       dispatch(newTestResults(data));
+      // console.log('newData: ',newData)
       // const newBools: Array<boolean> = []
       // for (let i = 0; i < newData.length; i += 1) {
       //   newBools[i] = false;
@@ -60,9 +62,10 @@ const NavBar: () => JSX.Element = () => {
 
   useEffect(() => {
     console.log(name);
+    console.log('newData: ',newData)
     // setTestResult(ourData)
     // window.addEventListener('click', handleClickForTestResults);
-  }, [name]);
+  }, [name, newData]);
   //newData[i].fileResults.status==='fail' || newData[i].fileResults.status ==='fail by default'
 
   // const handleExpandClick = (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -95,6 +98,9 @@ const handleShowState = () => {
           {newData[i].fileResults.end>0 && <div><strong>End: </strong>{newData[i].fileResults.end}</div>}
           <div><strong>File Path: </strong>{newData[i].filePath}</div>
           <br></br>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
         </button>
         {expandBools[i] && <div>
             <div><strong>Details: </strong>This matters because...</div>

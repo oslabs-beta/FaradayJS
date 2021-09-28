@@ -19,11 +19,12 @@ const testResultSlice = createSlice({
         newTestResults(state, action: PayloadAction<any>) {
             // console.log(action.payload[0]);
             state.testResults = action.payload;
-            console.log(state.testResults);
-            for (let i = 0; i < state.testResults.length; i += 0) {
+            console.log('testResults in slice: ',state.testResults);
+            for (let i = 0; i < state.testResults.length; i += 1) {
                 state.expansionStatus.push(false);
             }
             state.projectName = 'Fred';
+            console.log('state.projectname: ',state.projectName)
         },
         expandResult(state, action: PayloadAction<number>) {
             state.expansionStatus[action.payload] = !state.expansionStatus[action.payload];
