@@ -89,7 +89,7 @@ const handleShowState = () => {
       <div className="w-full p-3" key={i}>
         {/* lg:h-32 border border-gray-other*/}
         <button onClick={() => dispatch(expandResult(i))} className="flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
-          <div>{i}</div>
+          {/* <div>{i}</div> */}
           <div><strong>Test: </strong>{newData[i].fileResults.testProp}</div> 
           <div className={newData[i].fileResults.status.includes('pass') ? "text-green-700" : "text-red-700"}><strong>Status: </strong>{newData[i].fileResults.status}</div>
           {newData[i].fileResults.status.includes('fail') && <div><strong>Issue: </strong>{`${newData[i].fileResults.testProp} is set to ${newData[i].fileResults.failValue}`}</div>}
@@ -102,7 +102,7 @@ const handleShowState = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
           </svg>
         </button>
-        {expandBools[i] && <button className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest">
+        {expandBools[i] && <button className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3">
           <strong>Details: </strong>This matters because... 
           </button>}
     </div>);
@@ -123,7 +123,7 @@ const handleShowState = () => {
         </div>
       </div>
       <div className='col-span-6'>{conditional}</div>
-      <button onClick={handleShowState}>See State</button>
+      {/* <button onClick={handleShowState}>See State</button> */}
     </div>
   );
 }
