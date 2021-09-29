@@ -21,8 +21,11 @@ const traverser = async (ast:any) =>{
       }
     },
     keys:{
-      'ClassProperty': ['key', 'value']
-    }
+      'ClassProperty': ['key', 'value'],
+      'TSModuleDeclaration': ['body'],
+      'TSModuleBlock': ['body']
+    },
+    fallback: 'iteration'
   });
   return cache;
 } catch (e) {
