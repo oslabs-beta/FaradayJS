@@ -19,9 +19,13 @@ export const htmlparser = (obj: string) => {
   let tempCache: { [key: string]: boolean } = {};
   const tests: any = {
     disablewebsecurity: {
+      default: false,
+      description: "Disables same-origin policy and sets allwRunningInsecureContent to true.",
       failValue: true,
     },
     allowpopups: {
+      default: false,
+      description: "New windows will use BrowserWindows using window.open(). If you are not using them, it's best not to enable them.",
       failValue: true
     }
   }
@@ -36,6 +40,7 @@ export const htmlparser = (obj: string) => {
         const testResult = {
           testProp: test,
           failValue: tests[test].failValue,
+          description: "none",
           status: 'unknown',
           start: 0,
           end: 0
@@ -44,12 +49,16 @@ export const htmlparser = (obj: string) => {
           if (name === 'webview' &&
             attribute.hasOwnProperty(test)
           ) {
-            testResult.status = 'fail'
+            testResult.status = 'fail';
+            testResult.description = tests[test].description;
+            console.log('testResult.description: ', testResult.description);
             testResults.push(testResult);
           } else if (name === 'webview' &&
             !attribute.hasOwnProperty(test)
             ) {
               testResult.status = 'pass by default';
+              testResult.description = tests[test].description;
+              console.log('testResult.description: ', testResult.description);
               testResults.push(testResult);
           }
         }
@@ -84,6 +93,7 @@ export const htmlparser = (obj: string) => {
       testResults.push({
         testProp: test,
         failValue: tests[test].failValue,
+        description: tests[test].description,
         status: 'pass by default',
         start: 0,
         end: 0

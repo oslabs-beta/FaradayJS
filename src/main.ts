@@ -183,7 +183,6 @@ const processCodeBase = async (codebaseObj:any) => {
         }
       }
    }
-   //console.log('Raw After ProcessCodeBase: ', rawTestResults);
    return rawTestResults;
   }catch(err){
     console.log('ProcessCodeBase: ', err)

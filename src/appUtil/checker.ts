@@ -1,7 +1,11 @@
 import defaultConfig from './defaultConfig'
+import settingsInfo from './securitySettingsInfo';
+import groupSettings from './groupSettings';
+// console.log("settings: ", settingsInfo);
 
 const checker = (propertiesObj: { [key: string]: any }, version: number) => {
-
+  
+  // console.log('propertiesObj: ', propertiesObj);
   const tests: any = {
     webSecurity: {
       failValue: false
@@ -17,23 +21,26 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
     }
   }
 
-  const versionDefaults: any = Object.values(defaultConfig)[2]
+  const versionDefaults: any = groupSettings(version)
+
   const testResults: any = [];
 
-  for (let test in tests) {
-    //console.log(tests[test].failValue);
+  for (let test in versionDefaults) {
+    // console.log('test: ', test);
+    // console.log('versionDefaults[test]: ', versionDefaults[test]);
 
-    if (tests[test].hasOwnProperty('failValue')) {
+    if (versionDefaults[test].hasOwnProperty('failValue')) {
       const testProp: any = test;
-      const testFailValue: any = tests[test].failValue;
+      const testFailValue: any = versionDefaults[test].failValue;
       const testResult = {
         testProp: testProp,
         failValue: testFailValue,
         status: 'unknown',
+        description: 'none',
         start: 0,
         end: 0
       };
-
+      
       if (propertiesObj.hasOwnProperty(testProp)) {
         testResult.start = propertiesObj[testProp].start;
         testResult.end = propertiesObj[testProp].end;
@@ -42,16 +49,24 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         } else if (propertiesObj[testProp].value === !testFailValue) {
           testResult.status = 'pass';
         }
-      } else if (versionDefaults[testProp] === testFailValue) {
+      } else if (versionDefaults[testProp].default == testFailValue) {
         testResult.status = 'fail by default';
+        testResult.description = versionDefaults[testProp].description;
       } else { //if (versionDefaults[testProp] === !failValue) {
         testResult.status = 'pass by default';
+        testResult.description = versionDefaults[testProp].description;
+        continue;
       }
+
+      // console.log('testProp: ', testProp);
+      // console.log('versionDefaults[testProp].default: ', versionDefaults[testProp].default);
+      // console.log("versionDefaults[testProp].failValue: ", versionDefaults[testProp].failValue);
+      // console.log("testFailValue: ", testFailValue);
       //console.log('Single Test Result: ', testResult);
       testResults.push(testResult);
     }
   }
-  //console.log('Checker results: ', testResults);
+  // console.log('Checker results: ', testResults);
   return testResults;
 };
 
