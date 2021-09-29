@@ -4,11 +4,11 @@ import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
 import menuTemplate from './appUtil/menuTemplate';
+import tsmorph from './appUtil/tsmorph';
 
 const fs = require('fs')
 const path = require('path')
 const isDev = require('electron-is-dev')
-
 
 let win: BrowserWindow;
 
@@ -16,7 +16,7 @@ const options = {
   width: 800,
   height: 600,
   webPreferences: {
-    nodeIntegration: true,
+    nodeIntegration: false,
     preload: path.join(__dirname, "preload.js")
   }
 }
@@ -33,46 +33,43 @@ const createWindow = (): void => {
   ipcMain.on('main:open-file', async (event, payload)=>{
     try{
       const result = await OpenFile();
-      //console.log(result)
-
       event.reply('preload:open-file', result)
-
     }catch(err){
       console.log(err)
     }
   })
 
-  ipcMain.on('main:test', (event, payload)=>{
-    event.sender.send('preload:test', 'sdsdsdsdsdsd')
-
+  ipcMain.on('main:change-value', async(event, payload)=>{
+    tsmorph(payload[0]+payload[1], payload[2], payload[3])
   })
-
-
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
       const rawResult: any = await OpenFolder();
-      const processedResult = await processCodeBase(rawResult);
-      const jsondResult = JSON.stringify(processedResult);
-      console.log('ProcessedResult: ', processedResult);
+      let processedResult;
+      if(rawResult) processedResult = await processCodeBase(rawResult);
       event.sender.send('preload:open-folder', processedResult);
     } catch (e) {
       console.log('Open Folder Error: ', e);
     }
-
   })
 
+  ipcMain.on('main:refresh-code', async (event, payload)=>{
+    try{
+      let refreshedObj = await refreshCode(payload[0]+payload[1], payload[2]);
+      event.sender.send('preload:refreshed-obj', refreshedObj)
+    }catch(e){
+      console.log('Refresh Error ', e)
+    }
+  })
 
   const isMac = process.platform === 'darwin'  
   const template: any = menuTemplate(win);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
-
 }
 
-
 app.on('ready', createWindow);
-
 
 // Open File Function
 const OpenFile = async () => {
@@ -93,19 +90,17 @@ const OpenFile = async () => {
     const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
     return fileContent;
   };
+
 }
 
 const OpenFolder = async () => {
   try {
-
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     });
-
-    if (!folders) return;
-
     
     const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
+
     const returnValue: any = {};
     returnValue.fileObjectArray = [];
     returnValue.packageJsonContents = '';
@@ -115,38 +110,43 @@ const OpenFolder = async () => {
       const readDirMain = fs.readdirSync(dirMain);
 
       readDirMain.forEach(async (dirNext: string) => {
-        if (fs.lstatSync(dirMain + "/" + dirNext).isDirectory()) {
-          readAllFolder(dirMain + "/" + dirNext);
+        if (fs.lstatSync(dirMain + "\\" + dirNext).isDirectory()) {
+          readAllFolder(dirMain + "\\" + dirNext);
         } else {
           if (
-            ((dirMain + "/" + dirNext).includes('.js') ||
-            (dirMain + "/" + dirNext).includes('.jsx') ||
-            (dirMain + "/" + dirNext).includes('.ts') ||
-            (dirMain + "/" + dirNext).includes('.tsx') ||
-            (dirMain + "/" + dirNext).includes('.html')) &&
-            !(dirMain + "/" + dirNext).includes(".vscode") &&
-            !(dirMain + "/" + dirNext).includes(".json") && 
-            !(dirMain + "/" + dirNext).includes("node_modules") &&
-            !(dirMain + "/" + dirNext).includes(".txt") &&
-            !(dirMain + "/" + dirNext).includes("dist") &&
-            !(dirMain + "/" + dirNext).includes("build")
+            ((dirMain + "\\" + dirNext).includes('.js') ||
+            (dirMain + "\\" + dirNext).includes('.jsx') ||
+            (dirMain + "\\" + dirNext).includes('.ts') ||
+            (dirMain + "\\" + dirNext).includes('.tsx') ||
+            (dirMain + "\\" + dirNext).includes('.html')) &&
+            !(dirMain + "\\" + dirNext).includes(".vscode") &&
+            !(dirMain + "\\" + dirNext).includes(".json") && 
+            !(dirMain + "\\" + dirNext).includes("node_modules") &&
+            !(dirMain + "\\" + dirNext).includes(".txt") &&
+            !(dirMain + "\\" + dirNext).includes("dist") &&
+            !(dirMain + "\\" + dirNext).includes("build")
             ){
-            const fileContent = fs.readFileSync(dirMain + "/" + dirNext).toString();
+            const fileContent = fs.readFileSync(dirMain + "\\" + dirNext).toString();
             const fileObj: any = {
-              path: dirMain + "/",
+              path: dirMain + "\\",
               fileName: dirNext,
               contents: fileContent
             }
             returnValue.fileObjectArray.push(fileObj);
-          } else if ((dirMain + "/" + dirNext).includes('package.json')){
-            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "/" + dirNext).toString();
+          } else if ((dirMain + "\\" + dirNext).includes('package.json')){
+            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "\\" + dirNext).toString();
           }
         }
       });
       return returnValue;
     }
 
-    return await readAllFolder(folder.filePaths[0]);
+    if(folder.canceled){
+      return
+    }else{
+      return await readAllFolder(folder.filePaths[0]);
+    }
+
   } catch(err){
     console.log('Open Folder Error: ', err);
   }
@@ -184,30 +184,23 @@ const processCodeBase = async (codebaseObj:any) => {
         }
       }
    }
-   console.log('Raw After ProcessCodeBase: ', rawTestResults);
+   //console.log('Raw After ProcessCodeBase: ', rawTestResults);
    return rawTestResults;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
   }
-
 } 
 
-
-// const interpretRawTestResults = (rawResults: any[]) => {
-//   const finalTestResults: any = {};
-
-//   // Step 1: consolidate results by test
-//   rawResults.forEach(test => {
-//     if (!finalTestResults.hasOwnProperty(test.fileResults.testProp)) {
-//       finalTestResults[test.fileResults.testProp] = test;
-//     } else if (finalTestResults[test.fileResults.testProp].status !== 'fail') { // TO THINK ABOUT: what if it fails the same test in multiple files?
-//       if (test.fileResults.status === 'fail') {
-//         finalTestResults[test.fileResults.testProp] = test; // overwrite file result with different status
-//       }
-//     }
-//   });
-//   // Step 3: Push final result object to finalTestResults
-//   // Step 4: return finalTestResults array to pass to react rendering side of application
-//  // console.log(finalTestResults);
-//   return finalTestResults;
-// }
+const refreshCode = async (path:string, passedTestProp:string) => {
+  let version = 13;
+  const fileContent = await fs.readFileSync(path).toString();
+  const ast:any = await parser(fileContent);
+  let traversedAstNodes  = await traverser(ast);
+  const fileResultsArray: any = await checker([traversedAstNodes], version);
+  for(let i = 0; i<fileResultsArray.length; i++){
+    if(fileResultsArray[i].testProp === passedTestProp){
+      var refreshedResult = fileResultsArray[i];
+    }
+  }
+  return refreshedResult;
+}
