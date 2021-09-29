@@ -45,8 +45,10 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         testResult.start = propertiesObj[testProp].start;
         testResult.end = propertiesObj[testProp].end;
         if (propertiesObj[testProp].value === testFailValue) {
+          testResult.description = versionDefaults[testProp].description;
           testResult.status = 'fail';
         } else if (propertiesObj[testProp].value === !testFailValue) {
+          testResult.description = versionDefaults[testProp].description;
           testResult.status = 'pass';
         }
       } else if (versionDefaults[testProp].default == testFailValue) {
@@ -62,7 +64,7 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
       // console.log('versionDefaults[testProp].default: ', versionDefaults[testProp].default);
       // console.log("versionDefaults[testProp].failValue: ", versionDefaults[testProp].failValue);
       // console.log("testFailValue: ", testFailValue);
-      //console.log('Single Test Result: ', testResult);
+      // console.log('Single Test Result: ', testResult);
       testResults.push(testResult);
     }
   }

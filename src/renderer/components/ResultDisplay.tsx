@@ -12,6 +12,7 @@ interface fileResult{
   status: string
   end: number
   testProp: string
+  description: string
   failValue: boolean
 }
 
@@ -21,7 +22,7 @@ const ResultDisplay = (): JSX.Element => {
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
   const dispatch = useDispatch();
   
-  const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
+  const handleClickChangeValue = async (args:[string, string, string, boolean, number, string])=>{
     //@ts-expect-error
     bridgeAPI.changeValue(args);
 
@@ -44,7 +45,7 @@ const ResultDisplay = (): JSX.Element => {
   for (let i = 0; i < newData.length; i++) {
     const fileName:string = newData[i].fileName;
     const filePath:string = newData[i].filePath;
-    const {start, status, end, testProp, failValue}:fileResult = newData[i].fileResults;
+    const {start, status, end, testProp, failValue, description}:fileResult = newData[i].fileResults;
 
     conditional.push(
     <div className="w-full p-3" key={i}>
@@ -73,9 +74,9 @@ const ResultDisplay = (): JSX.Element => {
           </svg>
       </button>
       {expandBools[i] && <div className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3">
-          <strong>Details: </strong>This matters because... 
+          <strong>Details: </strong>{description} 
           {status.includes('fail') && <button className="bg-blue-500 float-right hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick = {()=>handleClickChangeValue([filePath, fileName, testProp, !failValue, i])}> 
+            onClick = {()=>handleClickChangeValue([filePath, fileName, testProp, !failValue, i, description])}> 
             Change the setting
           </button>}
           </div>}

@@ -58,8 +58,8 @@ const settingsInfo :  { [key: string]: any } = {
          "description": "none"
     },
     "nativeWindowOpen": {
-        "failValue": false,
-        "description": "none"
+        "failValue": null,
+        "description": "When set to false window.open results in the creation of a BrowserWindowProxy wrapper around BrowserWindow. Electron pairs the native Chrome window with a BrowserWindow under the hood."
     },
     "navigateOnDragDrop": {
         "failValue": null,
@@ -67,7 +67,7 @@ const settingsInfo :  { [key: string]: any } = {
     },
     "nodeIntegration": {
         "failValue": true,
-        "description": "none"
+        "description": "Enables/disables the use of NodeJS "
     },
     "nodeIntegrationInWorker": {
         "failValue": true,

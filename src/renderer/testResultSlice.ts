@@ -5,6 +5,7 @@ interface fileResult {
     status: string
     end: number
     testProp: string
+    description: string
     failValue: boolean
   }
 
