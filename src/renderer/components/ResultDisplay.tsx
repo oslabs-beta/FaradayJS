@@ -75,7 +75,7 @@ const ResultDisplay = (): JSX.Element => {
       </button>
       {expandBools[i] && <div className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3">
           <strong>Details: </strong>{description} 
-          {status.includes('fail') && <button className="bg-blue-500 float-right hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          {status.includes('fail') && <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-gray-other active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             onClick = {()=>handleClickChangeValue([filePath, fileName, testProp, !failValue, i, description])}> 
             Change the setting
           </button>}
