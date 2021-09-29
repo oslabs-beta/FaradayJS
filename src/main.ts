@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
+import installExtension, { REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { parser, htmlparser } from './appUtil/parser'
 import checker from './appUtil/checker'
 import traverser from './appUtil/tsestraverse';
@@ -110,31 +111,32 @@ const OpenFolder = async () => {
       const readDirMain = fs.readdirSync(dirMain);
 
       readDirMain.forEach(async (dirNext: string) => {
-        if (fs.lstatSync(dirMain + "\\" + dirNext).isDirectory()) {
-          readAllFolder(dirMain + "\\" + dirNext);
+        const nextDirectory = path.resolve(dirMain, dirNext);
+        if (fs.lstatSync(nextDirectory).isDirectory()) {
+          readAllFolder(nextDirectory);
         } else {
           if (
-            ((dirMain + "\\" + dirNext).includes('.js') ||
-            (dirMain + "\\" + dirNext).includes('.jsx') ||
-            (dirMain + "\\" + dirNext).includes('.ts') ||
-            (dirMain + "\\" + dirNext).includes('.tsx') ||
-            (dirMain + "\\" + dirNext).includes('.html')) &&
-            !(dirMain + "\\" + dirNext).includes(".vscode") &&
-            !(dirMain + "\\" + dirNext).includes(".json") && 
-            !(dirMain + "\\" + dirNext).includes("node_modules") &&
-            !(dirMain + "\\" + dirNext).includes(".txt") &&
-            !(dirMain + "\\" + dirNext).includes("dist") &&
-            !(dirMain + "\\" + dirNext).includes("build")
+            ((nextDirectory).includes('.js') ||
+            (nextDirectory).includes('.jsx') ||
+            (nextDirectory).includes('.ts') ||
+            (nextDirectory).includes('.tsx') ||
+            (nextDirectory).includes('.html')) &&
+            !(nextDirectory).includes(".vscode") &&
+            !(nextDirectory).includes(".json") && 
+            !(nextDirectory).includes("node_modules") &&
+            !(nextDirectory).includes(".txt") &&
+            !(nextDirectory).includes("dist") &&
+            !(nextDirectory).includes("build")
             ){
-            const fileContent = fs.readFileSync(dirMain + "\\" + dirNext).toString();
+            const fileContent = fs.readFileSync(nextDirectory).toString();
             const fileObj: any = {
-              path: dirMain + "\\",
+              path: dirMain + '\\', //process.platform === 'darwin' ? '/' : '\\',
               fileName: dirNext,
               contents: fileContent
             }
             returnValue.fileObjectArray.push(fileObj);
-          } else if ((dirMain + "\\" + dirNext).includes('package.json')){
-            returnValue.packageJsonContents = await fs.readFileSync(dirMain + "\\" + dirNext).toString();
+          } else if (nextDirectory.includes('package.json')){
+            returnValue.packageJsonContents = await fs.readFileSync(nextDirectory).toString();
           }
         }
       });

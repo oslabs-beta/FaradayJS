@@ -1,35 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import openFolderIcon from '../../icons/openFolder.svg';
 import icon from '../../icons/iconTransparent.svg';
 import ResultDisplay from './ResultDisplay'
 
-const NavBar = () =>{
-  const history = useHistory();
+import { RootState } from '../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { newTestResults } from '../testResultSlice';
 
-  const [newData, setNewData] = useState<any[]>([]);
-  const [testProp, setTestProp] = useState("");
-  const [status, setStatus] = useState("");
-  const [failValue, setFailValue] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [start, setStart] = useState(0);
-  const [end, setEnd] = useState(0);
-  const [filePath, setFilePath] = useState("");
-  
-  // let ourData : { fileName: string, filePath: string, fileResults: { end: undefined, failValue: string, start: undefined, status: string, testProp: string } }[];
-  // let newData:any = null
-  const handleClickOpenFolder = () =>{
+
+const NavBar: () => JSX.Element = () => {
+ 
+  const name = useSelector((state: RootState) => state.testResults.projectName);
+  const dispatch = useDispatch();
+
+  const handleClickOpenFolder = () => {
     //@ts-expect-error
     bridgeAPI.openFolder();
 
-    // / data: { fileName: string, filePath: string, fileResults: { end: bool, failValue: string, start: bool, status: string, testProp: string } }[]
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
-      //console.log('data: ', data);
-      setNewData(data)
+      console.log('data: ', data);
+      dispatch(newTestResults(data));
     });
   }
+
 
   return(
     <div>
@@ -42,10 +38,9 @@ const NavBar = () =>{
           <img className="object-right-top h-16" src={icon}/>
         </div>
       </div>
-      <ResultDisplay newData = {newData}/>
+      <ResultDisplay />
     </div>
-    
-  )
+  );
 }
 
 export default withRouter(NavBar);
