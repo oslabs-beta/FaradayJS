@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';    
+//import { composeWithDevTools } from 'redux-devtools-extension';    
 import testResultsReducer from './testResultSlice'
 
 // export const store = configureStore({
@@ -9,7 +9,7 @@ import testResultsReducer from './testResultSlice'
 
 const reducer = combineReducers({ testResults: testResultsReducer });
 
-export const store = createStore(reducer, composeWithDevTools());
+export const store = createStore(reducer);
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

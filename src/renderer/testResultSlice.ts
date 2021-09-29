@@ -1,15 +1,33 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface fileResult {
+    start: number
+    status: string
+    end: number
+    testProp: string
+    failValue: boolean
+  }
+
+  interface testResult {
+    fileName: string,
+    filePath: string,
+    fileResults: fileResult
+  }
+
 export interface TestResultState {
     projectName: string,
-    testResults: any[],
-    expansionStatus: boolean[];
+    testResults: testResult[],
+    expansionStatus: boolean[],
+    morphBools: boolean[],
+    simpleBool: boolean
 }
 
 const initialState = {
-    projectName: 'Joe',
+    projectName: '',
     testResults: [],
-    expansionStatus: []
+    expansionStatus: [],
+    morphBools: [],
+    simpleBool: false
 } as TestResultState;
 
 const testResultSlice = createSlice({
@@ -23,8 +41,6 @@ const testResultSlice = createSlice({
             for (let i = 0; i < state.testResults.length; i += 1) {
                 state.expansionStatus.push(false);
             }
-            state.projectName = 'Fred';
-            console.log('state.projectname: ',state.projectName)
         },
         expandResult(state, action: PayloadAction<number>) {
             state.expansionStatus[action.payload] = !state.expansionStatus[action.payload];
