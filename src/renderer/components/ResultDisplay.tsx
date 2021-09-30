@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { expandResult } from '../testResultSlice';
 
 
-
 interface fileResult{
   start: number
   status: string
@@ -31,12 +30,7 @@ const ResultDisplay = (): JSX.Element => {
 
     //@ts-expect-error
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
-      //console.log('data: ', data);
-      // let items:{fileName:string, filePath:string, fileResults:fileResult}[] = [...arrItems]
-      // let item:{fileName:string, filePath:string, fileResults:fileResult} = {fileName: args[1], filePath:args[0], fileResults: data};
-      // if(item) items[args[4]] = item;
-      // if(items) setArrItems([...items])
-      // setSimpleBool(!simpleBool);
+      console.log('data: ', data);
     });
   }
 

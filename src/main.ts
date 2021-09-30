@@ -111,7 +111,7 @@ const OpenFolder = async () => {
       const readDirMain = fs.readdirSync(dirMain);
 
       readDirMain.forEach(async (dirNext: string) => {
-        const nextDirectory = path.resolve(dirMain, dirNext);
+        const nextDirectory = dirMain + "/" + dirNext;
         if (fs.lstatSync(nextDirectory).isDirectory()) {
           readAllFolder(nextDirectory);
         } else {
@@ -130,7 +130,7 @@ const OpenFolder = async () => {
             ){
             const fileContent = fs.readFileSync(nextDirectory).toString();
             const fileObj: any = {
-              path: dirMain + '\\', //process.platform === 'darwin' ? '/' : '\\',
+              path: dirMain + '/', //process.platform === 'darwin' ? '/' : '\\',
               fileName: dirNext,
               contents: fileContent
             }
