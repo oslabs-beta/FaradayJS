@@ -10,27 +10,7 @@ interface fileResult{
 }
 
 const ResultDisplay = (props: any): JSX.Element => {
-  let tempBoolArr:boolean[] = [];
-  for(let i = 0; i<props.newData.length; i++){
-    let boolcheck = props.newData[i].fileResults.status.includes('pass')? true : false;
-    tempBoolArr.push(boolcheck)
-  }
-  
   const conditional:any = [];
-  const [arrItems, setArrItems] = useState<{fileName:string, filePath:string, fileResults:fileResult}[]>([]);
-  const [boolArr, setBoolArr] = useState<boolean[]>(tempBoolArr);
-  const [simpleBool, setSimpleBool] = useState(false);
-
-  useEffect(() => {
-    setBoolArr(tempBoolArr)
-  },[tempBoolArr.length]);
-
-  useEffect(() => {
-    console.log('bool changed');
-  },[simpleBool]);
-
-  //console.log('temp', tempBoolArr);
-  //console.log('boolarr', boolArr)
   
   const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
     //@ts-expect-error
@@ -42,15 +22,8 @@ const ResultDisplay = (props: any): JSX.Element => {
     //@ts-expect-error
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
       //console.log('data: ', data);
-      let items:{fileName:string, filePath:string, fileResults:fileResult}[] = [...arrItems]
-      let item:{fileName:string, filePath:string, fileResults:fileResult} = {fileName: args[1], filePath:args[0], fileResults: data};
-      if(item) items[args[4]] = item;
-      if(items) setArrItems([...items])
-      setSimpleBool(!simpleBool);
     });
   }
-
-
 
   for (let i = 0; i < props.newData.length; i++) {
     const fileName:string = props.newData[i].fileName;
