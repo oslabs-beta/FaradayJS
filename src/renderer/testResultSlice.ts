@@ -45,8 +45,12 @@ const testResultSlice = createSlice({
         expandResult(state, action: PayloadAction<number>) {
             state.expansionStatus[action.payload] = !state.expansionStatus[action.payload];
         },
+        updateResult(state, action: PayloadAction<any>) {
+          // console.log('action.payload: ',action.payload)
+          state.testResults[action.payload.index] = action.payload
+      },
     },
 });
 
-export const { newTestResults, expandResult } = testResultSlice.actions;
+export const { newTestResults, expandResult, updateResult } = testResultSlice.actions;
 export default testResultSlice.reducer;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
-
+import { updateResult } from '../testResultSlice';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { expandResult } from '../testResultSlice';
@@ -29,9 +29,16 @@ const ResultDisplay = (): JSX.Element => {
 
     //@ts-expect-error
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
-      console.log('data: ', data);
+      // if(data.status.includes('pass')) console.log(data); 
+      data['id']=args[4]
+      if(data.status.includes('pass')) dispatch(updateResult(data)); 
+      // conditional[args[4]]=data
     });
   }
+
+  useEffect(()=>{
+
+  },[newData])
 
   const conditional: Array<JSX.Element> = [];
 
