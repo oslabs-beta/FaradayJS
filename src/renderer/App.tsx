@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../src/styles.css';
 import NavBar from './components/NavBar';
-import { withRouter } from 'react-router-dom';
 
 const App = () => {
   
@@ -27,4 +26,4 @@ const App = () => {
   )
 }
 
-export default withRouter(App);
+export default App;

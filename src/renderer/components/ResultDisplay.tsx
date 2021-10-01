@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,11 +34,20 @@ const ResultDisplay = (): JSX.Element => {
   }
 
   const conditional: Array<JSX.Element> = [];
+ 
+  let reorderedTests: Array<any> = [];
 
-  for (let i = 0; i < newData.length; i++) {
-    const fileName:string = newData[i].fileName;
-    const filePath:string = newData[i].filePath;
-    const {start, status, end, testProp, failValue, description}:fileResult = newData[i].fileResults;
+  for(let i = 0; i < newData.length; i++){
+    if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") reorderedTests.push(newData[i]);
+  }
+  for(let i = 0; i < newData.length; i++){
+    if(newData[i].fileResults["status"] !== "fail" || newData[i].fileResults["status"] !== "fail by default") reorderedTests.push(newData[i]);
+  }
+
+  for (let i = 0; i < reorderedTests.length; i++) {
+    const fileName:string = reorderedTests[i].fileName;
+    const filePath:string = reorderedTests[i].filePath;
+    const {start, status, end, testProp, failValue, description}:fileResult = reorderedTests[i].fileResults;
 
     conditional.push(
     <div className="w-full p-3" key={i}>
@@ -84,4 +92,4 @@ const ResultDisplay = (): JSX.Element => {
   );
 };
 
-export default withRouter(ResultDisplay);
+export default ResultDisplay;

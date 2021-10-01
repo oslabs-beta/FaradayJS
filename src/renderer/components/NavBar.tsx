@@ -1,6 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router';
-import { withRouter } from 'react-router-dom';
 import openFolderIcon from '../../icons/openFolder.svg';
 import icon from '../../icons/iconTransparent.svg';
 import ResultDisplay from './ResultDisplay'
@@ -43,4 +41,4 @@ const NavBar: () => JSX.Element = () => {
   );
 }
 
-export default withRouter(NavBar);
+export default NavBar;

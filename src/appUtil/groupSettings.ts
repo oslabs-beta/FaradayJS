@@ -39,7 +39,7 @@ const groupSettings = (version: number) => {
             versionDefaults[setting].description = settingsInfo[setting].description;
         }
     }
-
+    // console.log('versionDefaults: ', versionDefaults);
     return versionDefaults;
 }
 

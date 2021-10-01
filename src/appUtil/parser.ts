@@ -16,16 +16,15 @@ export const parser = async (obj: string) => {
 
 export const htmlparser = (obj: string) => {
   //const dom = htmlparser2.parseDocument(obj); // you can see the whole DOM
-  let tempCache: { [key: string]: boolean } = {};
   const tests: any = {
     disablewebsecurity: {
       default: false,
-      description: "Disables same-origin policy and sets allwRunningInsecureContent to true.",
+      description: "Related to webSecurity. This allows the execution of insecure code from different domains. It allows CORS requests (an origin is considered the same origin if it has the same protocol, port (if specified) and host), and ignores X-Frame-Options which serve to indicate whether or not, and in what context a browser is allowed to render a page. Enabling this setting disables the same-origin policy and sets allowRunningInsecureContent to true.",
       failValue: true,
     },
     allowpopups: {
       default: false,
-      description: "New windows will use BrowserWindows using window.open(). If you are not using them, it's best not to enable them.",
+      description: "New windows will open a BrowserWindow using window.open() when nativeWindowOpen is set to true and create a BrowserWindowProxy when nativeWindowOpen is set to false. BrowserWindow by default has complete access to the Node API. Allowing popups and loading insecure content in your application can pose security risks. Node Integration and Javascript will be disabled in the new window if it is also disabled in the parent window. Similarly, context isolation will be enabled if it is enabled in the parent window. It is best to only allow websites to create new popups if you are sure it is necessary. ",
       failValue: true
     }
   }
