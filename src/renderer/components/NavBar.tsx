@@ -8,14 +8,19 @@ import ResultDisplay from './ResultDisplay'
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { newTestResults } from '../testResultSlice';
+import { updateLoading } from '../loadingSlice';
+
 
 
 const NavBar: () => JSX.Element = () => {
  
   const name = useSelector((state: RootState) => state.testResults.projectName);
+  const loading = useSelector((state: RootState) => state.loading);
   const dispatch = useDispatch();
 
   const handleClickOpenFolder = () => {
+    console.log('laoding: ',loading)
+    // dispatch(updateLoading())
     //@ts-expect-error
     bridgeAPI.openFolder();
 

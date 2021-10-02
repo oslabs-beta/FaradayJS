@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { expandResult, updateResult } from '../testResultSlice';
+import Loader from './Loader'
 
 
 interface fileResult{
@@ -18,6 +19,7 @@ const ResultDisplay = (): JSX.Element => {
   const newData = useSelector((state: RootState) => state.testResults.testResults);
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
   const fixedBools = useSelector((state: RootState) => state.testResults.fixedStatus);
+  const loading = useSelector((state: RootState) => state.loading);
   const dispatch = useDispatch();
   
   const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
@@ -110,6 +112,7 @@ const ResultDisplay = (): JSX.Element => {
 
   return (
     <div className='col-span-6'>
+      {(loading&&conditional.length===0) &&<Loader/>}
       {conditional}
     </div>
   );
