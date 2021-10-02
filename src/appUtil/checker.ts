@@ -6,12 +6,13 @@ import groupSettings from './groupSettings';
 const checker = (propertiesObj: { [key: string]: any }, version: number) => {
   
   // console.log('propertiesObj: ', propertiesObj);
- 
+  console.log('version: ', version);
   const versionDefaults: any = groupSettings(version)
 
   const testResults: any = [];
   console.log('versionDefaults: ', versionDefaults);
 
+  console.log('propertiesObj: ', propertiesObj);
   for (let test in versionDefaults) {
     // console.log('test: ', test);
     // console.log('versionDefaults[test]: ', versionDefaults[test]);
@@ -27,7 +28,6 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         start: 0,
         end: 0
       };
-      console.log('propertiesObj: ', propertiesObj);
       // Check if the properties that were grabbed from the users codebase includes this 
       // setting that was in our default configuration object
       if (propertiesObj.hasOwnProperty(testProp)) {
