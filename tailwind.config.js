@@ -27,7 +27,12 @@ module.exports = {
         DEFUALT: '#fac3af',
         dark: '#7d6157',
         other: '#af897a'
-      }
+      },
+      teal: {
+        light: '#E6FFFA',
+        DEFUALT: '#38B2AC',
+        dark: '#38B2AC',
+      },
     },
     screens: {
       sm: '480px',
