@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
-
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { expandResult } from '../testResultSlice';
-
 
 interface fileResult{
   start: number
@@ -15,7 +13,6 @@ interface fileResult{
 }
 
 const ResultDisplay = (): JSX.Element => {
-
   const newData = useSelector((state: RootState) => state.testResults.testResults);
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
   const dispatch = useDispatch();
@@ -29,7 +26,7 @@ const ResultDisplay = (): JSX.Element => {
 
     //@ts-expect-error
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
-      console.log('data: ', data);
+      //console.log('data: ', data);
     });
   }
 
