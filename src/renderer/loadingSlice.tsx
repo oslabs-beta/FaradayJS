@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState={loading: false}
+const initialState={gettingData: true}
 
 
 const loadingSlice = createSlice({
@@ -9,7 +9,7 @@ const loadingSlice = createSlice({
   reducers: {
 
     updateLoading(state){
-      state.loading=!state.loading
+      state.gettingData=!state.gettingData
     },
   },
 });

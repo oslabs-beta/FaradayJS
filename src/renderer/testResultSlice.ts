@@ -46,6 +46,7 @@ const testResultSlice = createSlice({
                 state.expansionStatus.push(false);
                 state.fixedStatus.push(false)
             }
+            
 
 
         },

@@ -20,7 +20,7 @@ const NavBar: () => JSX.Element = () => {
 
   const handleClickOpenFolder = () => {
     console.log('laoding: ',loading)
-    // dispatch(updateLoading())
+    dispatch(updateLoading())
     //@ts-expect-error
     bridgeAPI.openFolder();
 
