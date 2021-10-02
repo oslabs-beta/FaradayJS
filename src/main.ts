@@ -9,7 +9,7 @@ import tsmorph from './appUtil/tsmorph';
 
 const fs = require('fs')
 const path = require('path')
-const isDev = require('electron-is-dev')
+//const isDev = require('electron-is-dev')
 
 let win: BrowserWindow;
 
@@ -94,7 +94,7 @@ const OpenFile = async () => {
 
 }
 
-const OpenFolder = async () => {
+export const OpenFolder = async () => {
   try {
     const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
       properties: ['openDirectory']
