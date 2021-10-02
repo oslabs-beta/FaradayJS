@@ -36,13 +36,16 @@ const ResultDisplay = (): JSX.Element => {
   const conditional: Array<JSX.Element> = [];
  
   let reorderedTests: Array<any> = [];
-
+  let failCount: any = 0;
   for(let i = 0; i < newData.length; i++){
     if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") reorderedTests.push(newData[i]);
+    failCount++;
   }
   for(let i = 0; i < newData.length; i++){
     if(newData[i].fileResults["status"] !== "fail" || newData[i].fileResults["status"] !== "fail by default") reorderedTests.push(newData[i]);
   }
+
+  console.log('failCount: ', failCount);
 
   for (let i = 0; i < reorderedTests.length; i++) {
     const fileName:string = reorderedTests[i].fileName;
