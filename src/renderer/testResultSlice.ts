@@ -18,6 +18,7 @@ export interface TestResultState {
     projectName: string,
     testResults: testResult[],
     expansionStatus: boolean[],
+    fixedStatus: boolean[],
     morphBools: boolean[],
     simpleBool: boolean
 }
@@ -26,6 +27,7 @@ const initialState = {
     projectName: '',
     testResults: [],
     expansionStatus: [],
+    fixedStatus: [],
     morphBools: [],
     simpleBool: false
 } as TestResultState;
@@ -40,14 +42,15 @@ const testResultSlice = createSlice({
             console.log(state.testResults);
             for (let i = 0; i < state.testResults.length; i += 1) {
                 state.expansionStatus.push(false);
+                state.fixedStatus.push(false)
             }
         },
         expandResult(state, action: PayloadAction<number>) {
             state.expansionStatus[action.payload] = !state.expansionStatus[action.payload];
         },
-        updateResult(state, action: PayloadAction<any>) {
+        updateResult(state, action: PayloadAction<number>) {
           // console.log('action.payload: ',action.payload)
-          state.testResults[action.payload.index] = action.payload
+          state.fixedStatus[action.payload] = true
       },
     },
 });
