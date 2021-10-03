@@ -26,7 +26,8 @@ const NavBar: () => JSX.Element = () => {
 
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
-      console.log('data: ', data);
+      // dispatch(updateLoading())
+      // console.log('data: ', data);
       dispatch(newTestResults(data));
     });
   }

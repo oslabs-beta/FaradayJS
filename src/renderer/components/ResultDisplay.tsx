@@ -115,7 +115,7 @@ const ResultDisplay = (): JSX.Element => {
   return (
     <div className='col-span-6'>
       {loading &&<Loader/>}
-      {conditional}
+      {!loading&&conditional}
     </div>
   );
 };
