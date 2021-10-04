@@ -37,15 +37,17 @@ const testResultSlice = createSlice({
     name: 'testresult',
     initialState,
     reducers: {
+        // resetResults(state){state.testResults=[]},
 
         newTestResults(state, action: PayloadAction<any>) {
-            // console.log(action.payload[0]);
+            console.log('payload: ',action.payload);
             state.testResults = action.payload;
-            console.log(state.testResults);
-            for (let i = 0; i < state.testResults.length; i += 1) {
-                state.expansionStatus.push(false);
-                state.fixedStatus.push(false)
-            }
+            state.fixedStatus=[]
+            // console.log(state.testResults);
+            // for (let i = 0; i < state.testResults.length; i += 1) {
+            //     state.expansionStatus.push(false);
+            //     state.fixedStatus.push(false)
+            // }
             
 
 

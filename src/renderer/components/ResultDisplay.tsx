@@ -49,7 +49,8 @@ const ResultDisplay = (): JSX.Element => {
 
   const conditional: Array<JSX.Element> = [];
 
-  for (let i = 0; i < newData.length; i++) {
+  if(newData){
+    for (let i = 0; i < newData.length; i++) {
     const fileName:string = newData[i].fileName;
     const filePath:string = newData[i].filePath;
     const {start, status, end, testProp, failValue}:fileResult = newData[i].fileResults;
@@ -110,7 +111,7 @@ const ResultDisplay = (): JSX.Element => {
 
           </div>}
     </div>);
-  }
+  }}
 
   return (
     <div className='col-span-6'>
