@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { expandResult, updateResult } from '../testResultSlice';
+import Loader from './Loader'
+import { updateLoading } from '../loadingSlice';
 
 
 interface fileResult{
@@ -18,6 +20,7 @@ const ResultDisplay = (): JSX.Element => {
   const newData = useSelector((state: RootState) => state.testResults.testResults);
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
   const fixedBools = useSelector((state: RootState) => state.testResults.fixedStatus);
+  const loading = useSelector((state: RootState) => state.loading.gettingData);
   const dispatch = useDispatch();
   
   const handleClickChangeValue = async (args:[string, string, string, boolean, number])=>{
@@ -40,12 +43,14 @@ const ResultDisplay = (): JSX.Element => {
   }
 
   useEffect(()=>{
+    dispatch(updateLoading())
 
   },[newData])
 
   const conditional: Array<JSX.Element> = [];
 
-  for (let i = 0; i < newData.length; i++) {
+  if(newData){
+    for (let i = 0; i < newData.length; i++) {
     const fileName:string = newData[i].fileName;
     const filePath:string = newData[i].filePath;
     const {start, status, end, testProp, failValue}:fileResult = newData[i].fileResults;
@@ -106,11 +111,12 @@ const ResultDisplay = (): JSX.Element => {
 
           </div>}
     </div>);
-  }
+  }}
 
   return (
     <div className='col-span-6'>
-      {conditional}
+      {loading &&<Loader/>}
+      {!loading&&conditional}
     </div>
   );
 };

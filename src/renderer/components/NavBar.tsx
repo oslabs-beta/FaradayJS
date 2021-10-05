@@ -8,20 +8,27 @@ import ResultDisplay from './ResultDisplay'
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { newTestResults } from '../testResultSlice';
+import { updateLoading } from '../loadingSlice';
+
 
 
 const NavBar: () => JSX.Element = () => {
  
   const name = useSelector((state: RootState) => state.testResults.projectName);
+  const loading = useSelector((state: RootState) => state.loading);
   const dispatch = useDispatch();
 
   const handleClickOpenFolder = () => {
+    // dispatch(resetResults())
+    // console.log('laoding: ',loading)
+    dispatch(updateLoading())
     //@ts-expect-error
     bridgeAPI.openFolder();
 
     //@ts-expect-error
     bridgeAPI.receiveData('preload:open-folder', (data: any)=>{
-      console.log('data: ', data);
+      // dispatch(updateLoading())
+      // console.log('data: ', data);
       dispatch(newTestResults(data));
     });
   }
