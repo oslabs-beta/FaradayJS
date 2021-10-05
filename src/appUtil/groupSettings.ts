@@ -1,12 +1,10 @@
 import defaultConfig from './defaultConfig'
 import settingsInfo from './securitySettingsInfo';
-// console.log('typeof(settingsInfo}: ', typeof(settingsInfo));
 
 const groupSettings = (version: number) => {
     let userVersionNumber: number = parseInt(version.toString().split(".")[0]);
-
     const testsObj: any = {};
-    const versionObj: any = {};
+    let versionObj: any = {};
     Object.keys(defaultConfig).forEach((str, index) => {
         versionObj[parseInt(str.split(".")[0])] = index;
     });
@@ -27,19 +25,24 @@ const groupSettings = (version: number) => {
         console.log('Using default version 13.0.0');
         userVersionNumber = 13;
     }
-    // console.log('Found version: ', versionObj[userVersionNumber]);
-    // console.log('Group of settings: ', Object.values(defaultConfig)[versionObj[userVersionNumber]]);
     versionDefaults = Object.values(defaultConfig)[versionObj[userVersionNumber]];
 
-    // console.log("versionDefaults: ", versionDefaults);
     for(const [setting, values] of Object.entries(versionDefaults)){
         if(settingsInfo[setting]){
-            // console.log('setting: ', setting);
             versionDefaults[setting].failValue = settingsInfo[setting].failValue;
             versionDefaults[setting].description = settingsInfo[setting].description;
         }
     }
-    // console.log('versionDefaults: ', versionDefaults);
+    // add a test for the version, if it is older than version 13
+    if(userVersionNumber < 13){
+        console.log('Version needs to be updated');
+        versionDefaults["needToUpdateVersion"] =  {
+            default: true,
+            failValue: true,
+            description: "It is recommended that you update to the latest version of Electron as Electron is continuiously implementing updates and changes that make your application more secure."
+        };
+    }
+
     return versionDefaults;
 }
 

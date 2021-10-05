@@ -4,22 +4,17 @@ import groupSettings from './groupSettings';
 // console.log("settings: ", settingsInfo);
 
 const checker = (propertiesObj: { [key: string]: any }, version: number) => {
-  
-  // console.log('propertiesObj: ', propertiesObj);
-  console.log('version: ', version);
   const versionDefaults: any = groupSettings(version)
-
-  const testResults: any = [];
   console.log('versionDefaults: ', versionDefaults);
 
-  console.log('propertiesObj: ', propertiesObj);
+  const testResults: any = [];
+
   for (let test in versionDefaults) {
-    // console.log('test: ', test);
-    // console.log('versionDefaults[test]: ', versionDefaults[test]);
 
     if (versionDefaults[test].hasOwnProperty('failValue')) {
       const testProp: any = test;
       const testFailValue: any = versionDefaults[test].failValue;
+      console.log('test: ', test);
       const testResult = {
         testProp: testProp,
         failValue: testFailValue,
@@ -61,16 +56,9 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         testResult.description = versionDefaults[testProp].description;
         continue;
       }
-
-      // console.log('testProp: ', testProp);
-      // console.log('versionDefaults[testProp].default: ', versionDefaults[testProp].default);
-      // console.log("versionDefaults[testProp].failValue: ", versionDefaults[testProp].failValue);
-      // console.log("testFailValue: ", testFailValue);
-      // console.log('Single Test Result: ', testResult);
       testResults.push(testResult);
     }
   }
-  // console.log('Checker results: ', testResults);
   return testResults;
 };
 

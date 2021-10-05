@@ -122,6 +122,11 @@ const settingsInfo :  { [key: string]: any } = {
         "failValue": true,
         "description": "none"
     }
+    // ,
+    // "needToUpdateVersion": {
+    //     "failValue": true,
+    //     "description": "It is recommended that you update to the latest version of Electron as Electron is continuiously implementing updates and changes that make your application more secure."
+    // }
 
 }
 export default settingsInfo
