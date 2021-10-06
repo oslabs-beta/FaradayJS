@@ -21,5 +21,11 @@ contextBridge.exposeInMainWorld(
         refreshCode: (args:any) =>{
             ipcRenderer.send('main:refresh-code', args)
         },
+        addIgnore:(args:any)=>{
+            ipcRenderer.send('main:addIgnore', args)
+        },
+        removeIgnore:(args:string)=>{
+            ipcRenderer.send('main:removeIgnore', args)
+        }
     }
 )

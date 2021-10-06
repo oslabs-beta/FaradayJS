@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { expandResult, updateResult } from '../testResultSlice';
+import { expandResult, updateResult } from '../Slices/testResultSlice';
 
 interface fileResult{
   start: number
