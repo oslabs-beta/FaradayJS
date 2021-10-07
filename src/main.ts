@@ -48,7 +48,6 @@ const createWindow = (): void => {
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
-      console.log(doNotInclude);
       const rawResult: any = await OpenFolder(win, doInclude,doNotInclude);
       let processedResult;
       if(rawResult) processedResult = await processCodeBase(rawResult);
@@ -101,7 +100,7 @@ const OpenFile = async () => {
 
   const file = await files; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
   if (file) { // !! ensures the resulting type is a boolean
-    console.log(file)
+    //console.log(file)
   };
 
 }
