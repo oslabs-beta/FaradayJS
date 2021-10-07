@@ -35,16 +35,7 @@ const ResultDisplay = (): JSX.Element => {
 
   const conditional: Array<JSX.Element> = [];
  
-  let reorderedTests: Array<any> = [];
   let failCount: any = 0;
-  
-  for(let i = 0; i < newData.length; i++){
-    if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") reorderedTests.push(newData[i]);
-    failCount++;
-  }
-  for(let i = 0; i < newData.length; i++){
-    if(newData[i].fileResults["status"] !== "fail" || newData[i].fileResults["status"] !== "fail by default") reorderedTests.push(newData[i]);
-  }
 
   if(failCount > 0) conditional.push(
     <div className="grid grid-cols-6">
@@ -55,10 +46,10 @@ const ResultDisplay = (): JSX.Element => {
     </div>
   );
 
-  for (let i = 0; i < reorderedTests.length; i++) {
-    const fileName:string = reorderedTests[i].fileName;
-    const filePath:string = reorderedTests[i].filePath;
-    const {start, status, end, testProp, failValue, description}:fileResult = reorderedTests[i].fileResults;
+  for (let i = 0; i < newData.length; i++) {
+    const fileName:string = newData[i].fileName;
+    const filePath:string = newData[i].filePath;
+    const {start, status, end, testProp, failValue, description}:fileResult = newData[i].fileResults;
 
     conditional.push(
     <div className="w-full p-3" key={i}>

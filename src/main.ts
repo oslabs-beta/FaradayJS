@@ -6,6 +6,7 @@ import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
 import menuTemplate from './appUtil/menuTemplate';
 import tsmorph from './appUtil/tsmorph';
+import { AsyncThunk } from '@reduxjs/toolkit';
 
 const fs = require('fs')
 const path = require('path')
@@ -153,6 +154,20 @@ const OpenFolder = async () => {
     console.log('Open Folder Error: ', err);
   }
 }
+const reOrderTests = async (resultsArr: any) => {
+  const reorderedTests: Array<any> = [];
+  for(let i = 0; i < resultsArr.length; i++){
+    if(resultsArr[i].fileResults["status"] == "fail" || resultsArr[i].fileResults["status"] == "fail by default") {
+      reorderedTests.push(resultsArr[i]);
+    }
+  }
+  for(let i = 0; i < resultsArr.length; i++){
+    if(resultsArr[i].fileResults["status"] == "pass" || resultsArr[i].fileResults["status"] == "pass by default") {
+      reorderedTests.push(resultsArr[i]);
+    }
+  }
+  return reorderedTests;
+}
 
 const processCodeBase = async (codebaseObj:any) => {
   try {
@@ -186,7 +201,10 @@ const processCodeBase = async (codebaseObj:any) => {
         }
       }
    }
-   return rawTestResults;
+  //  console.log('rawTestResults: ', rawTestResults);
+   const reorderedTests: any = await reOrderTests(rawTestResults);
+  //  return rawTestResults;
+  return reorderedTests;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
   }

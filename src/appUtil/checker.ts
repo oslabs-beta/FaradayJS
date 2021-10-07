@@ -5,7 +5,6 @@ import groupSettings from './groupSettings';
 
 const checker = (propertiesObj: { [key: string]: any }, version: number) => {
   const versionDefaults: any = groupSettings(version)
-  console.log('versionDefaults: ', versionDefaults);
 
   const testResults: any = [];
 
