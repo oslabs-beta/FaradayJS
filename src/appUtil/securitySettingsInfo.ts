@@ -25,13 +25,13 @@ const settingsInfo :  { [key: string]: any } = {
     },
     "allowRunningInsecureContent": {
         "failValue": true,
-        "description": "Setting this to true disables the default electron settings that prohibit websites loaded over secure sources (HTTPS) to load and execute scripts, CSS, or plugins from insecure sources (HTTP). Depending on the content you load onto your page, this could pose varying levels of security risks."
+        "description": "Setting this to true disables the default electron settings that prohibit websites loaded over secure sources (HTTPS), to load and execute scripts, CSS, or plugins from insecure sources (HTTP). Depending on the content you load onto your page, this could pose varying levels of security risks."
     },
     "enableBlinkFeatures": {
         // Can have many different values. Property is ideally not declared in files unless there's a clear purpose
         // If this is declared in application then it fails this test, regardless of what it's set to
         "failValue": true, 
-        "description": "Blink is Chromium's rendering engine which enables security features previously disabled by default for security purposes."
+        "description": "Blink is Chromium's rendering engine and setting this property to true enables features which had been previously disabled, by default, for security purposes. Some blink feratures are the following: KeyboardEventKey and ExecCommandInJavaScript. You should fully understand the security risks of the features you are enanbling and try your best to safeguard your application."
     },
     "experimentalFeatures": {
         "failValue": true,

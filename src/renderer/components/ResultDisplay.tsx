@@ -51,6 +51,9 @@ const ResultDisplay = (): JSX.Element => {
   const conditional: Array<JSX.Element> = [];
  
   let failCount: any = 0;
+  for(let i = 0; i < newData.length; i++){
+    if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") failCount++;
+  }
 
   if(failCount > 0) conditional.push(
     <div className="grid grid-cols-6">
