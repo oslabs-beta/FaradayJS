@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { expandResult, updateResult } from '../testResultSlice';
+import { expandResult, updateResult } from '../Slices/testResultSlice';
 import Loader from './Loader'
-import { updateLoading } from '../loadingSlice';
+import { updateLoading } from '../Slices/loadingSlice';
 
 interface fileResult{
   start: number
