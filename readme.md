@@ -11,26 +11,26 @@
 </p>
 <h2>Table of Contents</h2>
 
-- [About](https://github.com/oslabs-beta/FaradayJS/#About)
+- [About](https://github.com/oslabs-beta/FaradayJS/#about-faradayjs)
 - [Features](https://github.com/oslabs-beta/FaradayJS/#Features) 
-- [Download FaradayJS](https://github.com/oslabs-beta/FaradayJS/#get)
-- [How to Use](https://github.com/oslabs-beta/FaradayJS/#Example)
-- [Team](https://github.com/oslabs-beta/FaradayJS/#Team) 
+- [Download FaradayJS](https://github.com/oslabs-beta/FaradayJS/#download-faradayjs)
+- [How to Use](https://github.com/oslabs-beta/FaradayJS/#how-to-use)
+- [Team](https://github.com/oslabs-beta/FaradayJS/#our-team) 
 - [License](https://github.com/oslabs-beta/FaradayJS/#License) 
-- [Languages & Tools](https://github.com/oslabs-beta/FaradayJS/#Languages)
+- [Languages & Tools](https://github.com/oslabs-beta/FaradayJS/#languages-and-tools)
 
-<h2 href="#About">About FaradayJS</h2>
+<h2 href="#about-faradayjs">About FaradayJS</h2>
 
 Similar to how the Faraday cage blocks electromagnetic fileds, FaradayJS protects electron developers from settings which would make their applications vulnerable.
 
 <h2 href="#Features">Features</h2>
 
-<h2 href="#get">Download FaradayJS</h2>
+<h2 href="#download-faradayjs">Download FaradayJS</h2>
 
 FaradayJS can be downloaded for Windows, Mac and Linux systems at our website: <a href='http://www.faraday.js.com'>faradayjs.com</a>
 
 
-<h2 href="#Example">How to Use</h2>
+<h2 href="#how-to-use">How to Use</h2>
 <p align="center">
   <img src="./src/icons/Clipboard02.jpg"/>
   <img src="./src/icons/Clipboard03.jpg"/>
@@ -38,7 +38,7 @@ FaradayJS can be downloaded for Windows, Mac and Linux systems at our website: <
   <img src="./src/icons/Clipboard05.jpg"/>
 </p>
 
-<h2 href="#Team">Our Team</h2>
+<h2 href="#our-team">Our Team</h2>
 
 The team at FaradayJS 
 
@@ -72,7 +72,7 @@ This product is licensed under the MIT License.
 This open source product is accelerated by [OS Labs](https://opensourcelabs.io/).
 
 
-<h2 align="left" href="#Languages">Languages and Tools:</h2>
+<h2 href="#languages-and-tools" align="left">Languages and Tools:</h2>
 <p align="center">
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="80" height="80"/> </a> 
 <a href="https://www.typescriptlang.org/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="typescript" width="80" height="80"/> </a> 
