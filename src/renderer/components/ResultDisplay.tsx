@@ -55,7 +55,7 @@ const ResultDisplay = (): JSX.Element => {
   }
 
   if(failCount > 0) conditional.push(
-    <div className="grid grid-cols-6">
+    <div className="grid grid-cols-6 pt-5">
       <div className="col-span-1 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Fails: </strong>
           <span className="block sm:inline">{failCount}</span>
