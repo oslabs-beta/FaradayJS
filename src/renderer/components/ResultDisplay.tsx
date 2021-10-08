@@ -36,7 +36,6 @@ const ResultDisplay = (): JSX.Element => {
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
       // if(data.status.includes('pass')) console.log(data); 
       // data['id']=args[4]
-      console.log('data: ', data);
       if(data.status.includes('pass')){
         dispatch(updateResult(args[4])); 
         dispatch(expandResult(args[4]))

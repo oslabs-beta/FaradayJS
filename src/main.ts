@@ -221,6 +221,5 @@ const refreshCode = async (path:string, passedTestProp:string) => {
       var refreshedResult = fileResultsArray[i];
     }
   }
-  console.log('refreshedResult: ', refreshedResult);
   return refreshedResult;
 }

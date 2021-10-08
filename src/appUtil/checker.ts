@@ -5,7 +5,6 @@ import groupSettings from './groupSettings';
 
 const checker = (propertiesObj: { [key: string]: any }, version: number) => {
   const versionDefaults: any = groupSettings(version)
-
   const testResults: any = [];
 
   for (let test in versionDefaults) {
@@ -13,7 +12,6 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
     if (versionDefaults[test].hasOwnProperty('failValue')) {
       const testProp: any = test;
       const testFailValue: any = versionDefaults[test].failValue;
-      console.log('test: ', test);
       const testResult = {
         testProp: testProp,
         failValue: testFailValue,
@@ -53,7 +51,7 @@ const checker = (propertiesObj: { [key: string]: any }, version: number) => {
         // assign it a pass by default and description
         testResult.status = 'pass by default';
         testResult.description = versionDefaults[testProp].description;
-        continue;
+        // continue;
       }
       testResults.push(testResult);
     }
