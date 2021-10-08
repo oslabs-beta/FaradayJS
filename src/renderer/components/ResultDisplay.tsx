@@ -23,7 +23,8 @@ const ResultDisplay = (): JSX.Element => {
   const fixedBools = useSelector((state: RootState) => state.testResults.fixedStatus);
   const loading = useSelector((state: RootState) => state.loading.gettingData);
   const dispatch = useDispatch();
-  
+  console.log('Expandbools: ', expandBools);
+
   const handleClickChangeValue = async (args:[string, string, string, boolean, number, string])=>{
     //@ts-expect-error
     bridgeAPI.changeValue(args);
@@ -35,6 +36,7 @@ const ResultDisplay = (): JSX.Element => {
     bridgeAPI.receiveData('preload:refreshed-obj', (data: any)=>{
       // if(data.status.includes('pass')) console.log(data); 
       // data['id']=args[4]
+      console.log('data: ', data);
       if(data.status.includes('pass')){
         dispatch(updateResult(args[4])); 
         dispatch(expandResult(args[4]))
@@ -119,7 +121,7 @@ const ResultDisplay = (): JSX.Element => {
       </button>
       {expandBools[i] && <div className="m-5 flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3">
           <strong>Details: </strong>{description} 
-          {status.includes('fail') && <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-gray-other active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          {!testProp.includes('needToUpdateVersion') &&  status.includes('fail') && <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-gray-other active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             onClick = {()=>handleClickChangeValue([filePath, fileName, testProp, !failValue, i, description])}> 
             Change the setting
           </button>}

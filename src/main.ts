@@ -7,6 +7,7 @@ import versionFinder from './appUtil/versionFinder';
 import menuTemplate from './appUtil/menuTemplate';
 import tsmorph from './appUtil/tsmorph';
 import { AsyncThunk } from '@reduxjs/toolkit';
+import { ConstructorTypeNode } from 'ts-morph';
 
 const fs = require('fs')
 const path = require('path')
@@ -201,9 +202,8 @@ const processCodeBase = async (codebaseObj:any) => {
         }
       }
    }
-  //  console.log('rawTestResults: ', rawTestResults);
+
    const reorderedTests: any = await reOrderTests(rawTestResults);
-  //  return rawTestResults;
   return reorderedTests;
   }catch(err){
     console.log('ProcessCodeBase: ', err)
@@ -221,5 +221,6 @@ const refreshCode = async (path:string, passedTestProp:string) => {
       var refreshedResult = fileResultsArray[i];
     }
   }
+  console.log('refreshedResult: ', refreshedResult);
   return refreshedResult;
 }

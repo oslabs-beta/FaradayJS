@@ -3,6 +3,7 @@ import settingsInfo from './securitySettingsInfo';
 
 const groupSettings = (version: number) => {
     let userVersionNumber: number = parseInt(version.toString().split(".")[0]);
+    console.log('version from user: ', userVersionNumber);
     const testsObj: any = {};
     let versionObj: any = {};
     Object.keys(defaultConfig).forEach((str, index) => {
