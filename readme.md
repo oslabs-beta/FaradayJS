@@ -11,7 +11,13 @@
 </p>
 <h2>Table of Contents</h2>
 
-[About](https://github.com/oslabs-beta/FaradayJS/#About)[Features](https://github.com/oslabs-beta/FaradayJS/#Features) [Download FaradayJS](https://github.com/oslabs-beta/FaradayJS/#get)[How to Use](https://github.com/oslabs-beta/FaradayJS/#Example)[Team](https://github.com/oslabs-beta/FaradayJS/#Team) [License](https://github.com/oslabs-beta/FaradayJS/#License) [Languages & Tools](https://github.com/oslabs-beta/FaradayJS/#Languages)
+- [About](https://github.com/oslabs-beta/FaradayJS/#About)
+- [Features](https://github.com/oslabs-beta/FaradayJS/#Features) 
+- [Download FaradayJS](https://github.com/oslabs-beta/FaradayJS/#get)
+- [How to Use](https://github.com/oslabs-beta/FaradayJS/#Example)
+- [Team](https://github.com/oslabs-beta/FaradayJS/#Team) 
+- [License](https://github.com/oslabs-beta/FaradayJS/#License) 
+- [Languages & Tools](https://github.com/oslabs-beta/FaradayJS/#Languages)
 
 <h2 href="#About">About FaradayJS</h2>
 
