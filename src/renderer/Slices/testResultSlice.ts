@@ -43,15 +43,11 @@ const testResultSlice = createSlice({
         newTestResults(state, action: PayloadAction<any>) {
             console.log('payload: ',action.payload);
             state.testResults = action.payload;
-            state.fixedStatus=[]
             // console.log(state.testResults);
-            // for (let i = 0; i < state.testResults.length; i += 1) {
-            //     state.expansionStatus.push(false);
-            //     state.fixedStatus.push(false)
-            // }
-            
-
-
+            for (let i = 0; i < state.testResults.length; i += 1) {
+                state.expansionStatus.push(false);
+                state.fixedStatus.push(false)
+            }
         },
         expandResult(state, action: PayloadAction<number>) {
             state.expansionStatus[action.payload] = !state.expansionStatus[action.payload];

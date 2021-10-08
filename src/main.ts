@@ -6,8 +6,8 @@ import traverser from './appUtil/tsestraverse';
 import versionFinder from './appUtil/versionFinder';
 import menuTemplate from './appUtil/menuTemplate';
 import tsmorph from './appUtil/tsmorph';
-import { AsyncThunk } from '@reduxjs/toolkit';
-import { ConstructorTypeNode } from 'ts-morph';
+import OpenFolder from './appUtil/openFolder';
+import {doInclude, doNotInclude} from './appUtil/ignoreArr'
 
 const fs = require('fs')
 const path = require('path')
@@ -48,7 +48,7 @@ const createWindow = (): void => {
 
   ipcMain.on('main:open-folder', async (event, payload)=>{
     try{
-      const rawResult: any = await OpenFolder();
+      const rawResult: any = await OpenFolder(win, doInclude,doNotInclude);
       let processedResult;
       if(rawResult) processedResult = await processCodeBase(rawResult);
       event.sender.send('preload:open-folder', processedResult);
@@ -66,6 +66,20 @@ const createWindow = (): void => {
     }
   })
 
+  ipcMain.on('main:addIgnore', async(event, payload:string[])=>{
+    payload.forEach(x=>{
+      if(!doNotInclude.includes(x) && x !== undefined){
+        doNotInclude.push(x)
+      }
+    })
+  })
+
+  ipcMain.on('main:removeIgnore', async(event, payload:string)=>{
+    const index = doNotInclude.indexOf(payload);
+    doNotInclude.splice(index, 1);
+  })
+
+
   const isMac = process.platform === 'darwin'  
   const template: any = menuTemplate(win);
   const menu = Menu.buildFromTemplate(template);
@@ -78,11 +92,7 @@ app.on('ready', createWindow);
 const OpenFile = async () => {
   // Opens file dialog looking for markdown extension
   const files: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
-    properties: ['openFile'],
-    filters: [{
-      name: 'JS/TS files',
-      extensions: ['ts', 'tsx', 'js', 'jsx']
-    }]
+    properties: ['openFile', 'multiSelections'],
   })
 
   // If no files
@@ -90,71 +100,11 @@ const OpenFile = async () => {
 
   const file = await files; // Grabbing first item in the array. files(dialog.showOpenDialog) returns the absoulte path to the selected file
   if (file) { // !! ensures the resulting type is a boolean
-    const fileContent = fs.readFileSync(file.filePaths[0]).toString() //toString() to read contents as string
-    return fileContent;
+    //console.log(file)
   };
 
 }
 
-const OpenFolder = async () => {
-  try {
-    const folders: Promise<Electron.OpenDialogReturnValue> | Boolean | String = dialog.showOpenDialog(win, {
-      properties: ['openDirectory']
-    });
-    
-    const folder = await folders; // // returns {canceled: false, filePaths: [ 'D:\\Codesmith\\Projects\\TestElectron' ]}
-
-    const returnValue: any = {};
-    returnValue.fileObjectArray = [];
-    returnValue.packageJsonContents = '';
-
-    const readAllFolder = async (dirMain: string) => {
-      
-      const readDirMain = fs.readdirSync(dirMain);
-
-      readDirMain.forEach(async (dirNext: string) => {
-        const nextDirectory = dirMain + "/" + dirNext;
-        if (fs.lstatSync(nextDirectory).isDirectory()) {
-          readAllFolder(nextDirectory);
-        } else {
-          if (
-            ((nextDirectory).includes('.js') ||
-            (nextDirectory).includes('.jsx') ||
-            (nextDirectory).includes('.ts') ||
-            (nextDirectory).includes('.tsx') ||
-            (nextDirectory).includes('.html')) &&
-            !(nextDirectory).includes(".vscode") &&
-            !(nextDirectory).includes(".json") && 
-            !(nextDirectory).includes("node_modules") &&
-            !(nextDirectory).includes(".txt") &&
-            !(nextDirectory).includes("dist") &&
-            !(nextDirectory).includes("build")
-            ){
-            const fileContent = fs.readFileSync(nextDirectory).toString();
-            const fileObj: any = {
-              path: dirMain + '/', //process.platform === 'darwin' ? '/' : '\\',
-              fileName: dirNext,
-              contents: fileContent
-            }
-            returnValue.fileObjectArray.push(fileObj);
-          } else if (nextDirectory.includes('package.json')){
-            returnValue.packageJsonContents = await fs.readFileSync(nextDirectory).toString();
-          }
-        }
-      });
-      return returnValue;
-    }
-
-    if(folder.canceled){
-      return
-    }else{
-      return await readAllFolder(folder.filePaths[0]);
-    }
-
-  } catch(err){
-    console.log('Open Folder Error: ', err);
-  }
-}
 const reOrderTests = async (resultsArr: any) => {
   const reorderedTests: Array<any> = [];
   for(let i = 0; i < resultsArr.length; i++){

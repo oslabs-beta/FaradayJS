@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { expandResult, updateResult } from '../testResultSlice';
+import { expandResult, updateResult } from '../Slices/testResultSlice';
 import Loader from './Loader'
-import { updateLoading } from '../loadingSlice';
-
+import { updateLoading } from '../Slices/loadingSlice';
 
 interface fileResult{
   start: number
@@ -17,7 +16,6 @@ interface fileResult{
 }
 
 const ResultDisplay = (): JSX.Element => {
-
   const newData = useSelector((state: RootState) => state.testResults.testResults);
   const expandBools = useSelector((state: RootState) => state.testResults.expansionStatus);
   const fixedBools = useSelector((state: RootState) => state.testResults.fixedStatus);
