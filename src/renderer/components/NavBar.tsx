@@ -52,12 +52,13 @@ const NavBar: () => JSX.Element = () => {
   return(
     <div>
       <div className="grid grid-cols-2" id="results">
+        {/* flex flex-col rounded overflow-auto h-auto border border-transparent border-shadow shadow-lg p-3 hover:bg-blueGray-500 hover:border-gray-darkest */}
         <div className="justify-self-start"><button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" id='open-folder' onClick={handleClickOpenFolder}>
           <img className="fill-current w-4 h-4 mr-2" src={openFolderIcon}/>
           <span>Run Tests</span></button>
-          <form>
-            <input type='text' value={textInput} onChange={e=>setTextInput(e.target.value)}></input>
-            <button onClick={e=>handleSubmit(e)}>submit</button>
+          <form className="pt-2 pb-4">
+            <input className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 active:bg-blueGray-600 font-bold uppercase text-xs px-2 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type='text' value={textInput} onChange={e=>setTextInput(e.target.value)}></input>
+            <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-gray-other active:bg-blueGray-600 font-bold uppercase text-xs px-2 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={e=>handleSubmit(e)}>submit</button>
           </form>
         <IgnoreCards/>
         </div>
