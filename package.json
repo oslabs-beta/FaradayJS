@@ -22,12 +22,24 @@
       "main": "dist/main.js"
     },
     "appId": "FaradayJS",
-    "mac": {
-      "target": [
-        "dmg"
-      ]
+    "win": {
+      "target": ["nsis"]
+    },
+    "mac":{
+      "target":["dmg"]
+    },
+    "linux":{
+      "target":["deb"]
     },
     "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "dmg":{
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "deb":{
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     }
