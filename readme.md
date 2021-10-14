@@ -27,7 +27,7 @@ Similar to how the Faraday cage blocks electromagnetic fileds, FaradayJS protect
 
 <h2 href="#download-faradayjs">Download FaradayJS</h2>
 
-FaradayJS can be downloaded for Windows, Mac and Linux systems at our repo's <a href='https://github.com/oslabs-beta/FaradayJS/releases'>releases page</a>
+FaradayJS can be downloaded for Windows, Mac and Linux systems at our repo's <a href='https://github.com/oslabs-beta/FaradayJS/releases' target="_blank">releases page</a>
 
 
 <h2 href="#how-to-use">How to Use</h2>
