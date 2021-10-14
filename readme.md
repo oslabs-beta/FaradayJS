@@ -27,7 +27,7 @@ Similar to how the Faraday cage blocks electromagnetic fileds, FaradayJS protect
 
 <h2 href="#download-faradayjs">Download FaradayJS</h2>
 
-FaradayJS can be downloaded for Windows, Mac and Linux systems at our website: <a href='http://www.faraday.js.com'>faradayjs.com</a>
+FaradayJS can be downloaded for Windows and Mac systems at our website: <a href='http://www.faraday.js.com'>faradayjs.com</a>
 
 
 <h2 href="#how-to-use">How to Use</h2>
