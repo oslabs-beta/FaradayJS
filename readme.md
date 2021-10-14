@@ -32,13 +32,13 @@ FaradayJS can be downloaded for Windows and Mac at our repo's <a href='https://g
 
 <h2 href="#how-to-use">How to Use</h2>
 <p align="center">
-  First enter the names of the files and folders you would like to ignore or leave it blank to run on entire project. Click Run Tests.
+  <!-- First enter the names of the files and folders you would like to ignore or leave it blank to run on entire project. Click Run Tests. -->
   <img src="./src/icons/Clipboard02.jpg"/>
-  Select the root folder of your Electron app.
+  <!-- Select the root folder of your Electron app. -->
   <img src="./src/icons/Clipboard03.jpg"/>
-  View your test results, read about the importance of the settings and fix errors.
+  <!-- View your test results, read about the importance of the settings and fix errors. -->
   <img src="./src/icons/Clipboard04.jpg"/>
-  Enjoy your more secure Electron app.
+  <!-- Enjoy your more secure Electron app. -->
   <img src="./src/icons/Clipboard05.jpg"/>
 </p>
 
