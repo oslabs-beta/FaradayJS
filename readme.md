@@ -39,7 +39,7 @@ FaradayJS can be downloaded for Windows and Mac at our repo's <a href='https://g
   <!-- View your test results, read about the importance of the settings and fix errors. -->
   <img src="./src/icons/Clipboard04.jpg"/>
   <!-- Enjoy your more secure Electron app. -->
-  <img src="./src/icons/Clipboard05.jpg"/>
+  <img src="./src/icons/Clipboard01.jpg"/>
 </p>
 
 <h2 href="#our-team">Our Team</h2>
