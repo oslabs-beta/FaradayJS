@@ -49,19 +49,19 @@ const ResultDisplay = (): JSX.Element => {
 
   const conditional: Array<JSX.Element> = [];
  
-  let failCount: any = 0;
-  for(let i = 0; i < newData.length; i++){
-    if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") failCount++;
-  }
+  // let failCount: any = 0;
+  // for(let i = 0; i < newData.length; i++){
+  //   if(newData[i].fileResults["status"] == "fail" || newData[i].fileResults["status"] == "fail by default") failCount++;
+  // }
 
-  if(failCount > 0) conditional.push(
-    <div className="grid grid-cols-6">
-      <div className="col-span-1 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong className="font-bold">Fails: </strong>
-          <span className="block sm:inline">{failCount}</span>
-      </div>
-    </div>
-  );
+  // if(failCount > 0) conditional.push(
+  //   <div className="grid grid-cols-6 pt-5">
+  //     <div className="col-span-1 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+  //         <strong className="font-bold">Fails: </strong>
+  //         <span className="block sm:inline">{failCount}</span>
+  //     </div>
+  //   </div>
+  // );
 
   if(newData){
     for (let i = 0; i < newData.length; i++) {
