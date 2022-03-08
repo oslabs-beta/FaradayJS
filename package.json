@@ -1,14 +1,48 @@
 {
-  "name": "production",
+  "name": "FaradayJS",
   "version": "1.0.0",
-  "description": "",
+  "description": "A tool for securing your Electron Application!",
   "main": "dist/main.js",
   "scripts": {
     "start": "npm run build && electron dist/main.js",
     "devstart": "npm run build && electron ./dist/main.js",
     "dev:react": "concurrently \"webpack serve --hot --open\" ",
     "build": "webpack",
-    "tsc:build": "tsc"
+    "tsc:build": "tsc",
+    "test": "mocha",
+    "compile": "webpack --mode production",
+    "build-installer": "electron-builder"
+  },
+  "build": {
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "dist/main.js"
+    },
+    "appId": "FaradayJS",
+    "win": {
+      "target": ["nsis"]
+    },
+    "mac":{
+      "target":["dmg"]
+    },
+    "linux":{
+      "target":["deb"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "dmg":{
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "deb":{
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "keywords": [],
   "author": "",
@@ -25,29 +59,37 @@
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.31.1",
     "@typescript-eslint/typescript-estree": "^4.29.2",
+    "assert": "^2.0.0",
     "autoprefixer": "^9.8.6",
     "babel-loader": "^8.2.2",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
     "cross-env": "^7.0.3",
     "css-loader": "^6.2.0",
     "electron": "^13.1.9",
+    "electron-builder": "^22.13.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
+    "electron-webpack": "^2.8.2",
     "estraverse": "^5.2.0",
     "estraverse-jsx": "^1.4.0",
     "html-webpack-plugin": "^5.3.2",
     "htmlparser2": "^7.0.0",
     "jscodeshift": "^0.13.0",
     "mini-css-extract-plugin": "^2.2.0",
+    "mocha": "^9.1.2",
     "postcss": "^7.0.36",
     "postcss-loader": "^6.1.1",
     "react-ast": "^0.3.1",
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
     "redux-devtools-extension": "^2.13.9",
+    "spectron": "^15.0.0",
     "style-loader": "^3.2.1",
     "svg-url-loader": "^7.1.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "ts-loader": "^9.2.5",
+    "ts-mocha": "^8.0.0",
     "ts-morph": "^12.0.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
